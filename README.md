@@ -4,7 +4,7 @@
 HTML5感觉和Android的canvas挺相似，所以考虑移植过来。  
 绘图库核心是用配置信息绘图，通过逻辑运算绘图  
 本篇会持续更新，记录LogicCanvas的成长历程  
-更新时间：2018-09-12：10:25
+
 
 
 ##### 原理简单示意图：
@@ -197,6 +197,120 @@ zCanvas.drawNStar(new Painter()
 ![dp适配.png](https://upload-images.jianshu.io/upload_images/9414344-340c411d65170bfa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 >公共属性展示到这里，持续更新，敬请关注  
+更新时间：2018-09-12：10:25  
+[LogicCanvas-项目地址：github](https://github.com/toly1994328/logic-canvas-android)
+
+
+---
+
+#### 二、直线绘制：
+>特有属性：ps 参数类型 不定个数的Pos。  
+再次强调：默认使用的是0,0为原点的笛卡尔坐标系
+
+##### 1.单线条
+
+```
+ zCanvas.drawLines(
+         new Painter()
+                 .b(5f)
+                 .ps(new Pos(0, 0), new Pos(200, -200))
+ );
+```
+
+![绘制单直线.png](https://upload-images.jianshu.io/upload_images/9414344-2baec141a58dc594.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+---
+##### 2.多线条
+
+```
+zCanvas.drawLines(
+        new Painter()
+                .b(5f)
+                .ps(
+                        new Pos(0, 0),
+                        new Pos(200, -200),
+                        new Pos(200,-400),
+                        new Pos(200,-400),
+                        new Pos(800,-400),
+                        new Pos(0,0)
+                )
+);
+```
+
+![绘制多线条.png](https://upload-images.jianshu.io/upload_images/9414344-27ee9f5d7891e10a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+---
+
+#### 三、绘制矩形：
+>参数 ： x 矩形宽  
+y:矩形高  
+r:矩形圆角
+
+
+```
+zCanvas.drawRect(
+        new Painter()
+                .x(1000/2f).y(618/2f).r(50f)
+                .b(5f).ss(Color.RED).p(new Pos(100,-100))
+);
+```
+![绘制矩形.png](https://upload-images.jianshu.io/upload_images/9414344-df6cfb5de1976f09.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+---
+#### 四、画圆： 
+>dir true 逆时针方向绘制--默认  
+r 半径
+
+```
+zCanvas.drawCircle(
+        new Painter()
+                .r(100f)
+                .b(5f).ss(Color.RED)
+                .p(new Pos(200,-200))
+```
+
+![画圆.png](https://upload-images.jianshu.io/upload_images/9414344-dce3e1ce424f962c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+---
+#### 五、绘制弧线
+
+```
+zCanvas.drawArc(
+        new Painter()
+                .r(100f).ang(135f)
+                .b(1f).ss(Color.RED)
+                .p(new Pos(200,-100))
+);
+```
+![绘制弧线.png](https://upload-images.jianshu.io/upload_images/9414344-679f18469de74145.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+---
+
+#### 六、正多边形和正多角形
+
+```
+for (int i = 5; i < 10; i++) {
+    zCanvas.drawRegularPolygon(
+            new Painter()
+                    .num(i).R(80f)
+                    .b(4f)
+                    .p(new Pos(20+210*(i-5),-20)));
+    zCanvas.drawRegularStar(
+            new Painter()
+                    .num(i).R(80f)
+                    .b(4f)
+                    .p(new Pos(20+210*(i-5),-220)));
+}
+```
+
+![绘制正多边形和正多角星.png](https://upload-images.jianshu.io/upload_images/9414344-b8c986e32208259a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+![多角星分析图](https://upload-images.jianshu.io/upload_images/9414344-deffb348a52faa88.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+>展示到这里，持续更新，更多功能敬请期待  
+更新时间：2018-09-12：13:25  
 [LogicCanvas-项目地址：github](https://github.com/toly1994328/logic-canvas-android)
 ---
 
