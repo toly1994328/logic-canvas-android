@@ -36,20 +36,26 @@ public class LogicView extends View {
         super.onDraw(canvas);
         final ZCanvas zCanvas = new ZCanvas(canvas);
 
-//        for (int i = 5; i < 10; i++) {
-//            zCanvas.drawNStar(
-//                    new Painter()
-//                            .num(i)//角的个数,数字任意
-//                            .R(100f-5*i)//外接圆半径
-//                            .r(50f)
-//                            .p(new Pos(210*(i-5),0)));//内接圆半径
-//
-//        }
-        zCanvas.drawNStar(new Painter()
-                .num(5)
-                .R(20f)
-                .r(10f))
-        ;
+        for (int i = 5; i < 10; i++) {
+            zCanvas.drawRegularPolygon(
+                    new Painter()
+                            .num(i).R(80f)
+                            .b(4f)
+                            .p(new Pos(20+210*(i-5),-20)));//内接圆半径
+
+            zCanvas.drawRegularStar(
+                    new Painter()
+                            .num(i).R(80f)
+                            .b(4f)
+                            .p(new Pos(20+210*(i-5),-220)));//内接圆半径
+
+        }
+
+//        zCanvas.drawNStar(new Painter()
+//                .num(5)
+//                .R(20f)
+//                .r(10f))
+//        ;
 
 
 //        zCanvas.drawNStar(new Painter()
@@ -119,8 +125,8 @@ public class LogicView extends View {
 //                .fs(Color.YELLOW)
 //                .dp(mContext));
         //绘制网格
-//        CanvasUtils.drawGrid(mContext,50,canvas);
+        CanvasUtils.drawGrid(mContext,50,canvas);
 //        //绘制坐标系
-        CanvasUtils.drawCoord(mContext, new Pos(600, 200), 10, 50, canvas);
+//        CanvasUtils.drawCoord(mContext, new Pos(600, 200), 10, 50, canvas);
     }
 }

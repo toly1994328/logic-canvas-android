@@ -6,7 +6,6 @@ import android.graphics.Color;
 import java.util.Arrays;
 
 
-
 /**
  * 作者：张风捷特烈
  * 时间：2018/7/6:10:50
@@ -15,14 +14,14 @@ import java.util.Arrays;
  */
 public class Painter {
     public Pos mp0 = new Pos(0, 0);
-    public Pos mp1 = new Pos(0, 0);
-    public Pos mp2 = new Pos(0, 0);
+    public Pos mp1;
+    public Pos mp2;
 
     public Pos[] mps;
 
     public Float mc = 0f;//周长
-    public Float mang = 0f;//线与X轴夹角(弧度数)
-    public Float mk = 0f;//斜率
+    public Float mang = 0f;//线与X轴夹角(角度数)
+    public Float mk;//斜率
     public Float mb0 = 0f;//直线解析式x=0时，y的值
     public Float mx = 0f;//
     public Float my = 0f;//
@@ -30,7 +29,7 @@ public class Painter {
     public Float mb = 0f;//线宽
     public Pos mp = new Pos(0, 0);//图形距画布左顶点偏移量
     public Pos ma = new Pos(0, 0);//锚点
-    public Pos mcoo= new Pos(0, 0);//锚点
+    public Pos mcoo = new Pos(0, 0);//锚点
     public Float mrot = 0f;//旋转量
     public Float msx = 1f;//X缩放量
     public Float msy = 1f;//Y缩放量
@@ -46,7 +45,6 @@ public class Painter {
     public Float mr = 0f;//内接圆半径
 
 
-
     public Painter dp(Context ctx) {
         Painter painter = new Painter();
         painter.p0(dp2px(ctx, mp0.x), dp2px(ctx, mp0.y));
@@ -54,7 +52,7 @@ public class Painter {
         painter.p2(dp2px(ctx, mp2.x), dp2px(ctx, mp2.y));
 
         Pos[] temp = mps;
-        if (mps!=null) {
+        if (mps != null) {
             for (int i = 0; i < mps.length; i++) {
                 temp[i].x = dp2px(ctx, mps[i].x);
                 temp[i].y = dp2px(ctx, mps[i].y);
@@ -175,10 +173,12 @@ public class Painter {
         this.ma = new Pos(x, y);
         return this;
     }
+
     public Painter coo(Pos mcoo) {
         this.mcoo = mcoo;
         return this;
     }
+
     public Painter coo(Float x, Float y) {
         this.mcoo = new Pos(x, y);
         return this;
@@ -188,6 +188,7 @@ public class Painter {
         this.mrot = rot;
         return this;
     }
+
     public Painter sx(Float sx) {
         this.msx = sx;
         return this;
@@ -261,7 +262,7 @@ public class Painter {
     }
 
     public Float dp2px(Context ctx, Float dp) {
-        if (dp!=null) {
+        if (dp != null) {
             final Float scale = ctx.getResources().getDisplayMetrics().density;
             return dp * scale + 0.5f;
         }

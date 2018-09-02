@@ -3,7 +3,6 @@ package com.toly1994.logic_canvas.core;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.util.Log;
 
 import com.toly1994.logic_canvas.bean.Painter;
 import com.toly1994.logic_canvas.bean.Pos;
@@ -81,7 +80,6 @@ public class ZCanvas {
             }
 
             paint.setStrokeWidth((info.mb).intValue());
-            Log.d(TAG, "s2r: " + info);
             mOnPrepared.draw(paint);
 
         }
@@ -120,16 +118,16 @@ public class ZCanvas {
 
 
     /**
-     * 绘制线
+     * 绘制线: //TODO 解析线方程
      *
      * @param info
      */
-    public void drawLine(Painter info) {
+    private void drawLine(Painter info) {
         s2r(info, ShapePath.linePath(info));
     }
 
     /**
-     * 绘制线多点 //add-toly:2018-7-7 09:49:50
+     * 绘制线多点直线 //add-toly:2018-7-7 09:49:50
      *
      * @param info
      */
@@ -173,20 +171,23 @@ public class ZCanvas {
     /**
      * 绘制矩形：x,y,r
      *
-     * @param info
+     * @param info //TODO 矩形填充异常---hehehe
      */
     public void drawRect(Painter info) {
-        float width = info.mx.floatValue();
-        float height = info.my.floatValue();
-        float r = info.mr.floatValue();
-        boolean exist = Logic.isExist(info.mfs);
-        info.mps = new Pos[]{new Pos(0, r), new Pos(width - r, 0),
-                new Pos(width, height - r), new Pos(r, height)};
-        if (exist) {
-            drawLines(info);
-
-        }
-        s2r(info, ShapePath.rectPath(info));
+//        float width = info.mx.floatValue();
+//        float height = info.my.floatValue();
+//        float r = info.mr.floatValue();
+//
+//        boolean exist = Logic.isExist(info.mfs);
+//
+//        if (exist) {
+//            info.mps = new Pos[]{new Pos(0, r), new Pos(width - r, 0),
+//                    new Pos(width, r - height), new Pos(r, -height)};
+//            drawLines(info);
+////            s2r(info, ShapePath.rectPath(info));
+//        } else {
+            s2r(info, ShapePath.rectPath(info));
+//        }
 
     }
 

@@ -1,7 +1,7 @@
 package com.toly1994.logiccanvaslib;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.toly1994.logiccanvaslib.MyView.LogicView;
 

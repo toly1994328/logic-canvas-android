@@ -27,7 +27,10 @@ public class ShapePath {
      */
     public static Path linePath(Painter info) {
         Path path = new Path();
-        Painter line = Parse.line(info);
+
+        info.k((float) Math.tan(info.mang));
+        Painter line = Parse.getLine(info);
+
         path.moveTo((line.mp0.x), (line.mp0.y).floatValue());
         path.lineTo((line.mp1.x), (line.mp1.y).floatValue());
         return path;
@@ -114,8 +117,8 @@ public class ShapePath {
      */
     public static Path rectPath(Painter info) {
         Path path = new Path();
-        float width = info.mx;
-        float height = info.my;
+        float width = info.mx-info.mb;
+        float height = info.my-info.mb;
         float r = info.mr;
 
         if (2 * r > width || 2 * r > height) {

@@ -22,9 +22,8 @@ public class Parse {
      * @returns {*}
      */
     public static Painter line(Painter line) {
-
-        Parse.getLine(line);
-
+        line.k((float) Math.tan(line.mang));
+        line = Parse.getLine(line);
 
         if (Logic.isExist(line.mp0, line.mp1)) {
             Pos p0 = line.mp0;
@@ -53,7 +52,7 @@ public class Parse {
     }
 
 
-    private static Painter getLine(Painter line) {
+    public static Painter getLine(Painter line) {
 
 
         //存在两点时
@@ -67,7 +66,7 @@ public class Parse {
             }
 
             float k = (p1.y - p0.y) / (p1.x - p0.x);
-            float ang = (float)Math.atan(k);
+            float ang = (float) Math.atan(k);
             line.mang = ang;
 
             //两点式
@@ -89,28 +88,31 @@ public class Parse {
         }
 
         //点斜式
+        //已知起点和斜率
         if (Logic.isExist(line.mp0, line.mk)) {
             Pos p0 = line.mp0;
             float k = line.mk;
-
-            line.mp1.x = p0.x + 1;
-            line.mp1.y = p0.y + k;
+            Pos p1 = new Pos((p0.x + 1)*line.mc, (p0.y + k)*line.mc);
+            line.p1(p1);
+            return line;
         }
+
+        //已知终点和斜率
         if (Logic.isExist(line.mp1, line.mk)) {
             Pos p1 = line.mp1;
             float k = line.mk;
-
-            line.mp0.x = p1.x + 1;
-            line.mp0.y = p1.y + k;
+            Pos p0 = new Pos(( p1.x + 1)*line.mc, (p1.y + k)*line.mc);
+            line.p0(p0);
+            return line;
         }
-        if (Logic.isExist(line.mk, line.mb0)) {
 
+        if (Logic.isExist(line.mk, line.mb0)) {
             line.mp0.x = 0.f;
             line.mp0.y = line.mb0;
+            return line;
         }
 
-
-        return Parse.getLine(line);
+        return line;
     }
 
 

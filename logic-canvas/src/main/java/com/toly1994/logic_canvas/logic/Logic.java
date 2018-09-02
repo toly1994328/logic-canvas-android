@@ -140,6 +140,8 @@ public class Logic {
      * 判断参数是否存在
      */
     public static boolean isExist(Object... objs) {
+
+
         for (Object o : objs) {
             if (o == null) {
                 return false;

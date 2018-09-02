@@ -32,21 +32,19 @@ public class CanvasUtils {
         }
         //横线
         for (int i = 0; i < getScreenHeight(ctx) / step; i++) {
-            zCanvas.drawLine(
+            zCanvas.drawLines(
                     new Painter()
-                            .ss(Color.BLACK)
-                            .b(2f)
-                            .p0(0f, 0f + step * i)
-                            .p1(getScreenWidth(ctx)+0F, 0f + step * i));
+                            .ss(Color.GRAY).b(2f)
+                            .ps(new Pos(0f, 0f - step * i), new Pos(getScreenWidth(ctx) + 0F, 0f - step * i))
+            );
         }
         //竖线
         for (int i = 0; i <= getScreenWidth(ctx) / step; i++) {
-            zCanvas.drawLine(
+            zCanvas.drawLines(
                     new Painter()
-                            .ss(Color.BLACK)
-                            .b(2f)
-                            .p0(0f + step * i, 0f)
-                            .p1(0f + step * i, 0f +getScreenHeight(ctx)));
+                            .ss(Color.GRAY).b(2f)
+                            .ps(new Pos(0f + step * i, 0f), new Pos(0f + step * i, 0f - getScreenHeight(ctx)))
+            );
         }
     }
 

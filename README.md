@@ -1,14 +1,27 @@
 #### 零、前言：
->安卓图形绘制一直以来感觉都很繁琐
-在html5时，我用JavaScript封装了一个HTML5的canvas库。
-HTML5感觉和Android的canvas挺相似，所以考虑移植过来。
-绘图库核心是用配置信息绘图，通过逻辑运算绘图
-本篇会持续更新，记录LogicCanvas的成长历程
+>安卓图形绘制一直以来感觉都很繁琐  
+在html5时，我用JavaScript封装了一个HTML5的canvas库。  
+HTML5感觉和Android的canvas挺相似，所以考虑移植过来。  
+绘图库核心是用配置信息绘图，通过逻辑运算绘图  
+本篇会持续更新，记录LogicCanvas的成长历程  
 更新时间：2018-09-12：10:25
 
 
 ##### 原理简单示意图：
 ![绘制一个五角星的过程.png](https://upload-images.jianshu.io/upload_images/9414344-d3d56c9d028e750b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+##### 引入
+```
+allprojects {
+	repositories {
+		...
+		maven { url 'https://jitpack.io' }
+	}
+}
+	
+implementation 'com.github.toly1994328:logic-canvas-android:0.01'
+```
+
 ---
 #### 一、以一个五角星来引入
 
@@ -27,7 +40,7 @@ zCanvas.drawNStar(
 ---
 
 #### 二、公有属性演示：
->所谓公有属性是指所有绘制图形适用的属性：包括
+>所谓公有属性是指所有绘制图形适用的属性：包括  
 线条粗细(b)、线条颜色(ss)、填充颜色(ss)、
 位移(p)、坐标系(coo)、旋转(rot)、缩放(sx,sy)屏幕适配dp单位(dp)
 
@@ -45,8 +58,8 @@ fs | "#0000ff"|填充样式|-
 dp | -|dp单位|在链式末尾调用
 
 ##### 1.位移：
->p 参数类型：Pos
-注：为了和数学更好契合，采用笛卡尔坐标系(上右正)，默认屏幕左上角(0,0)点
+>p 参数类型：Pos  
+注：为了和数学更好契合，采用笛卡尔坐标系(上右正)，默认屏幕左上角(0,0)点  
 为了明显，使用工具栏绘制网格参考
 
 ```
@@ -62,7 +75,7 @@ zCanvas.drawNStar(new Painter()
 
 ##### 2.坐标系：为了支持坐标系，可是煞费苦心啊！
 >coo 参数类型：Pos
-为了明显，使用工具栏绘制坐标系参考
+为了明显，使用工具栏绘制坐标系参考  
 注意：使用坐标系后、平移、旋转、缩放都会根据新的坐标系来
 
 ```
@@ -183,8 +196,8 @@ zCanvas.drawNStar(new Painter()
 
 ![dp适配.png](https://upload-images.jianshu.io/upload_images/9414344-340c411d65170bfa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
->公共属性展示到这里，持续更新，敬请关注
-
+>公共属性展示到这里，持续更新，敬请关注  
+[LogicCanvas-项目地址：github](https://github.com/toly1994328/logic-canvas-android)
 ---
 
 >本文由张风捷特烈原创,转载请注明  
