@@ -1,174 +1,191 @@
-#### 零、前言
+#### 零、前言：
+>安卓图形绘制一直以来感觉都很繁琐
+在html5时，我用JavaScript封装了一个HTML5的canvas库。
+HTML5感觉和Android的canvas挺相似，所以考虑移植过来。
+绘图库核心是用配置信息绘图，通过逻辑运算绘图
+本篇会持续更新，记录LogicCanvas的成长历程
+更新时间：2018-09-12：10:25
 
->[1].今天总结一下TextView  
-[2].TextView在View家族的地位是：源码行数11000+，可以说是个大类  
-[3].TextView直接继承自View，EditText，Button，CheckBox都是它的后代  
-[4].TextView可以说常用至极，所以掌握TextView是必要的
-[5].一些细小偏僻的点在这里综合一下，以便用时好找
 
+##### 原理简单示意图：
+![绘制一个五角星的过程.png](https://upload-images.jianshu.io/upload_images/9414344-d3d56c9d028e750b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 ---
-#### 一、拿一个Hello World的TextView来举例
-##### 1、代码中设置字体大小，自选尺寸
+#### 一、以一个五角星来引入
 
+##### 在自定义View的onDraw方法中：绘制外接圆半径100,内接圆半径50，填充色黄色的5角星
 ```
-mIdTv.setTextSize(TypedValue.COMPLEX_UNIT_DIP,20);//dp
-mIdTv.setTextSize(TypedValue.COMPLEX_UNIT_PT,20);//磅
-mIdTv.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);//sp---默认
-mIdTv.setTextSize(TypedValue.COMPLEX_UNIT_PX,20);//像素
-mIdTv.setTextSize(TypedValue.COMPLEX_UNIT_MM,20);//毫米
-mIdTv.setTextSize(TypedValue.COMPLEX_UNIT_IN, 20);//英寸
-```
-
----
-##### 2.append()添加字符串
-
-```
-mIdTv.append("--toly"); //Hello World--toly
-mIdTv.append("--toly", 0, 3); //Hello World--t
+ZCanvas zCanvas = new ZCanvas(canvas);
+zCanvas.drawNStar(
+    new Painter()
+            .num(5)//角的个数,数字任意
+            .R(100f)//外接圆半径
+            .r(50f)////内接圆半径
 ```
 
----
-##### 3.单行显示、行尾省略
-
-```
-mIdTv.setSingleLine();
-mIdTv.setEllipsize(TextUtils.TruncateAt.END);//结尾省略...
-或
-android:singleLine="true"
-android:ellipsize="end"
-```
+![五角星演示.png](https://upload-images.jianshu.io/upload_images/9414344-9322a4c50cb9f068.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ---
 
-##### 4.跑马灯效果
+#### 二、公有属性演示：
+>所谓公有属性是指所有绘制图形适用的属性：包括
+线条粗细(b)、线条颜色(ss)、填充颜色(ss)、
+位移(p)、坐标系(coo)、旋转(rot)、缩放(sx,sy)屏幕适配dp单位(dp)
+
+属性| 默认值|简介|备注
+---|---|---|----
+p | Pos(0,0)|图形距画布左顶点偏移量|
+rot | 0|旋转角度|弧度制
+sx | 0|x缩放|
+sy | 0|y缩放|
+coo | Pos(0,0)|修改坐标系|平移、缩放、旋转使用
+a | Pos(0,0)|修改锚点|
+b | 1|线条粗|
+ss | "#000000"|线条样式|-
+fs | "#0000ff"|填充样式|-
+dp | -|dp单位|在链式末尾调用
+
+##### 1.位移：
+>p 参数类型：Pos
+注：为了和数学更好契合，采用笛卡尔坐标系(上右正)，默认屏幕左上角(0,0)点
+为了明显，使用工具栏绘制网格参考
 
 ```
-android:focusable="true"
-android:focusableInTouchMode="true"
-android:ellipsize="marquee"
-android:singleLine="true"
-android:marqueeRepeatLimit="marquee_forever"
+zCanvas.drawNStar(new Painter()
+        .num(5)
+        .R(100f)
+        .r(50f)
+        .p(new Pos(200, -100)));//位移X,Y
 ```
-
+![位移p.png](https://upload-images.jianshu.io/upload_images/9414344-605ef0cdef854edc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ---
 
-##### 5.SpannableString的简单使用
->textview富文本，这里简单实现下图效果：
-
-![SpannableString](https://upload-images.jianshu.io/upload_images/9414344-9c8d4e80d930581f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+##### 2.坐标系：为了支持坐标系，可是煞费苦心啊！
+>coo 参数类型：Pos
+为了明显，使用工具栏绘制坐标系参考
+注意：使用坐标系后、平移、旋转、缩放都会根据新的坐标系来
 
 ```
-mIdTv.setText(seal());
+zCanvas.drawNStar(new Painter()
+        .num(5)
+        .R(100f)
+        .r(50f)
+        .coo(new Pos(600, 200))//设置坐标系
+);
+```
 
-private SpannableString seal() {
-    SpannableString ssSeal = new SpannableString("水杯特价￥50￥3点击购买");
-    //图片
-    Drawable drawable = getResources().getDrawable(R.mipmap.cup);
-    drawable.setBounds(0,0,200,200);
-    ImageSpan imageSpan = new ImageSpan(drawable);
-    ssSeal.setSpan(imageSpan, 0, 2, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-    //斜体
-    StyleSpan styleSpan_I  = new StyleSpan(Typeface.ITALIC);
-    ssSeal.setSpan(styleSpan_I, 2, 3, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-    //粗体
-    StyleSpan styleSpan_B  = new StyleSpan(Typeface.BOLD);
-    ssSeal.setSpan(styleSpan_B, 3, 4, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-    //背景
-    BackgroundColorSpan bgSpan = new BackgroundColorSpan(Color.parseColor("#662B90F5"));
-    ssSeal.setSpan(bgSpan, 7, 9, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-    //下划线
-    ssSeal.setSpan(new StrikethroughSpan(), 4,7, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-    //颜色
-    ForegroundColorSpan colSpan = new ForegroundColorSpan(Color.CYAN);
-    ssSeal.setSpan(colSpan, 9, 13, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-    //字大小
-    ssSeal.setSpan(new RelativeSizeSpan(2f), 7, 9, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-    //下划线
-    ssSeal.setSpan(new UnderlineSpan(), 9,13, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-    return ssSeal;
-}
+![坐标系coo.png](https://upload-images.jianshu.io/upload_images/9414344-46d594b3a1355f63.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+---
+
+##### 3.描边颜色、粗细
+>ss 描边颜色 参数类型：int (颜色)
+b 描边粗细 参数类型：int
+
+```
+zCanvas.drawNStar(new Painter()
+        .num(5)
+        .R(100f)
+        .r(50f)
+        .p(new Pos(200, -100))
+        .ss(Color.RED)//描边颜色
+        .b(5f)//描边线条粗细
+);
+```
+![描边，颜色.png](https://upload-images.jianshu.io/upload_images/9414344-0019bfb6e28aca67.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+---
+
+##### 4.旋转：思考良久，单位还是采用：角度数吧
+>rot 旋转 参数类型：Float
+
+```
+zCanvas.drawNStar(new Painter()
+        .num(5)
+        .R(100f)
+        .r(50f)
+        .ss(Color.RED)
+        .coo(new Pos(600, 200))
+        .rot(90f)//设置旋转
+);
 ```
 
 ---
-##### 6.阴影效果
-![阴影.png](https://upload-images.jianshu.io/upload_images/9414344-0fb538fa56f9a588.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+![旋转.png](https://upload-images.jianshu.io/upload_images/9414344-a9c30e694dbc5a64.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+##### 5.缩放：
+>sx、sy 缩放比例 参数类型：Float
 
 ```
-android:shadowColor="#DAA0F8"
-android:shadowDx="5"
-android:shadowDy="5"
-android:shadowRadius="10"
+zCanvas.drawNStar(new Painter()
+        .num(5)
+        .R(100f)
+        .r(50f)
+        .ss(Color.RED)
+        .coo(new Pos(600, 200))
+        .sx(1.5f)
+        .sy(1.5f)
+);
 ```
-
----
-##### 7.字间距、行间距
-![字间距.png](https://upload-images.jianshu.io/upload_images/9414344-20341d17c998b07d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-```
-android:letterSpacing="0.5"//设置字间距
-android:lineSpacingExtra //设置行间距，如”8dp”。
-android:lineSpacingMultiplier//设置行间距倍数，如“1.2”，即为1.2倍行间距
-```
-
----
-##### 8.设置textView抗锯齿
-
-```
-mIdTv.getPaint().setAntiAlias(true);或
-mIdTv.getPaint().setFlags(Paint.ANTI_ALIAS_FLAG);
-```
+![缩放.png](https://upload-images.jianshu.io/upload_images/9414344-e45ddd253bba16d5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ---
-##### 9.添加HTML
+
+##### 6.锚点：
+>coo 参数类型：Pos
 
 ```
-Spanned spanned = Html.fromHtml(
-        "<b>toly:</b> link to" +
-                "<a href=\"http://www.toly1994.com\">Endless</a> ");
-mIdTv.setMovementMethod(LinkMovementMethod.getInstance());//激活链接
-mIdTv.setText(spanned);
+zCanvas.drawNStar(new Painter()
+        .num(5)
+        .R(100f)
+        .r(50f)
+        .ss(Color.RED)
+        .coo(new Pos(600, 200))
+        .a(new Pos(100, 100))
+        .sx(1.5f)
+        .sy(1.5f)
+);
 ```
 
-![HTML.png](https://upload-images.jianshu.io/upload_images/9414344-d4fea350b2939e18.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![修改参照点放大.png](https://upload-images.jianshu.io/upload_images/9414344-82a425573f28f684.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 
 ---
-##### 10.自定义字体！！！
->准备字体ygyxsziti2.0.ttf  
-在项目main文件夹里创建assets文件夹
-
-![自定义字体.png](https://upload-images.jianshu.io/upload_images/9414344-8494a3b73238bb89.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+##### 7.填充
+>fs 描边颜色 参数类型：int (颜色)
 
 ```
-mIdTv.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/ygyxsziti2.0.ttf"));//设置字体
-mIdTv.setText("张风捷特烈");
+zCanvas.drawNStar(new Painter()
+        .num(5)
+        .R(100f)
+        .r(50f)
+        .coo(new Pos(600, 200))
+        .fs(Color.YELLOW)
+);
 ```
 
-##### 11.设置可选择
+![填充.png](https://upload-images.jianshu.io/upload_images/9414344-295746c05353d5d0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+---
+##### 8.dp单位适配
+>下面蓝色是没有适配的，黄色是适配的，蓝色在不同分辨率产生差异，黄色则正常显示
 
 ```
-android:textIsSelectable="true"
+zCanvas.drawNStar(new Painter()
+        .num(5)
+        .R(20f)
+        .r(10f)
+        .fs(Color.YELLOW)
+        .dp(mContext)
+);
 ```
 
-![可选择.png](https://upload-images.jianshu.io/upload_images/9414344-aacdb3c65d958b23.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![dp适配.png](https://upload-images.jianshu.io/upload_images/9414344-340c411d65170bfa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
+>公共属性展示到这里，持续更新，敬请关注
 
-##### 12.设置图片填充文字内部
-
-```
-mIdTv.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/ygyxsziti2.0.ttf"));//设置字体
-Bitmap bitmap = BitmapFactory.decodeResource(
-        getResources(),
-        R.mipmap.bg4);
-Shader shader = new BitmapShader(
-        bitmap,
-        Shader.TileMode.REPEAT,
-        Shader.TileMode.REPEAT);
-mIdTv.getPaint().setShader(shader);
-mIdTv.setText("张风捷特烈");
-```
-![设置贴图.png](https://upload-images.jianshu.io/upload_images/9414344-b461cb628ab39940.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+---
 
 >本文由张风捷特烈原创,转载请注明  
 [更多安卓技术欢迎访问：](https://www.jianshu.com/c/004f3fe34c94)https://www.jianshu.com/c/004f3fe34c94   
