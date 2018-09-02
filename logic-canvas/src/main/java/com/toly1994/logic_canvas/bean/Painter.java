@@ -30,8 +30,10 @@ public class Painter {
     public Float mb = 0f;//线宽
     public Pos mp = new Pos(0, 0);//图形距画布左顶点偏移量
     public Pos ma = new Pos(0, 0);//锚点
-    public Pos mcoo;//锚点
+    public Pos mcoo= new Pos(0, 0);//锚点
     public Float mrot = 0f;//旋转量
+    public Float msx = 1f;//X缩放量
+    public Float msy = 1f;//Y缩放量
     public Integer mfs;//填充颜色
     public Integer mss = Color.BLUE;//线条颜色
 
@@ -52,9 +54,11 @@ public class Painter {
         painter.p2(dp2px(ctx, mp2.x), dp2px(ctx, mp2.y));
 
         Pos[] temp = mps;
-        for (int i = 0; i < mps.length; i++) {
-            temp[i].x = dp2px(ctx, mps[i].x);
-            temp[i].y = dp2px(ctx, mps[i].y);
+        if (mps!=null) {
+            for (int i = 0; i < mps.length; i++) {
+                temp[i].x = dp2px(ctx, mps[i].x);
+                temp[i].y = dp2px(ctx, mps[i].y);
+            }
         }
         painter.ps(temp);
 
@@ -68,9 +72,12 @@ public class Painter {
 
         painter.p(dp2px(ctx, mp.x), dp2px(ctx, mp.y));
         painter.a(dp2px(ctx, ma.x), dp2px(ctx, ma.y));
+
         painter.coo(dp2px(ctx, mcoo.x), dp2px(ctx, mcoo.y));
 
         painter.rot(dp2px(ctx, mrot));
+        painter.sx(dp2px(ctx, msx));
+        painter.sy(dp2px(ctx, msy));
 
         painter.fs(mfs);
         painter.ss(mss);
@@ -89,7 +96,7 @@ public class Painter {
         return this;
     }
 
-    public Painter p0(float x, float y) {
+    public Painter p0(Float x, Float y) {
         this.mp0 = new Pos(x, y);
         return this;
     }
@@ -99,7 +106,7 @@ public class Painter {
         return this;
     }
 
-    public Painter p1(float x, float y) {
+    public Painter p1(Float x, Float y) {
         this.mp1 = new Pos(x, y);
         return this;
     }
@@ -109,7 +116,7 @@ public class Painter {
         return this;
     }
 
-    public Painter p2(float x, float y) {
+    public Painter p2(Float x, Float y) {
         this.mp2 = new Pos(x, y);
         return this;
     }
@@ -154,7 +161,7 @@ public class Painter {
         return this;
     }
 
-    public Painter p(float x, float y) {
+    public Painter p(Float x, Float y) {
         this.mp = new Pos(x, y);
         return this;
     }
@@ -164,7 +171,7 @@ public class Painter {
         return this;
     }
 
-    public Painter a(float x, float y) {
+    public Painter a(Float x, Float y) {
         this.ma = new Pos(x, y);
         return this;
     }
@@ -172,13 +179,22 @@ public class Painter {
         this.mcoo = mcoo;
         return this;
     }
-    public Painter coo(float x, float y) {
+    public Painter coo(Float x, Float y) {
         this.mcoo = new Pos(x, y);
         return this;
     }
 
     public Painter rot(Float rot) {
         this.mrot = rot;
+        return this;
+    }
+    public Painter sx(Float sx) {
+        this.msx = sx;
+        return this;
+    }
+
+    public Painter sy(Float sy) {
+        this.msy = sy;
         return this;
     }
 
@@ -244,8 +260,11 @@ public class Painter {
                 '}';
     }
 
-    public float dp2px(Context ctx, float dp) {
-        final float scale = ctx.getResources().getDisplayMetrics().density;
-        return dp * scale + 0.5f;
+    public Float dp2px(Context ctx, Float dp) {
+        if (dp!=null) {
+            final Float scale = ctx.getResources().getDisplayMetrics().density;
+            return dp * scale + 0.5f;
+        }
+        return dp;
     }
 }

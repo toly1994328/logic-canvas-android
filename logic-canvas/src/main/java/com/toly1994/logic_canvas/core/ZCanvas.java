@@ -1,13 +1,9 @@
 package com.toly1994.logic_canvas.core;
 
-import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.WindowManager;
 
 import com.toly1994.logic_canvas.bean.Painter;
 import com.toly1994.logic_canvas.bean.Pos;
@@ -56,6 +52,7 @@ public class ZCanvas {
 
         mCanvas.translate((info.ma.x).floatValue(), (info.ma.y).floatValue());
         mCanvas.rotate(info.mrot.floatValue());
+        mCanvas.scale(info.msx,info.msy);
         mCanvas.translate(-(info.ma.x).floatValue(), -(info.ma.y).floatValue());
 
 
@@ -68,9 +65,7 @@ public class ZCanvas {
             }
         });
 
-
         if (mOnPrepared != null) {
-
 
             Paint paint = new Paint();
             paint.setAntiAlias(true);//抗锯齿
@@ -224,112 +219,6 @@ public class ZCanvas {
     public void drawRegularPolygon(Painter info) {
 
         s2r(info, ShapePath.regularPolygonPath(info));
-    }
-
-    /**
-     * 获取画笔：DrawUtils.getPaint(Color.GREEN, Paint.Style.STROKE, 10);
-     *
-     * @param color 画笔颜色
-     * @param style 画笔样式
-     * @param width 画笔宽
-     * @return
-     */
-    public static Paint getPaint(int color, Paint.Style style, int width) {
-        Paint paint = new Paint();
-        paint.setAntiAlias(true);//抗锯齿
-        paint.setColor(color);
-        paint.setStyle(style);
-        paint.setStrokeWidth(width);
-        return paint;
-    }
-
-    public static Paint getPaint(int color) {
-        return getPaint(color, Paint.Style.FILL_AND_STROKE, 2);
-    }
-
-    public static Paint getPaint() {
-        return getPaint(Color.BLACK, Paint.Style.FILL_AND_STROKE, 2);
-    }
-
-    /**
-     * 绘制网格
-     *
-     * @param
-     * @param step
-     */
-    public void drawGrid(int step, Context ctx) {
-        if (step == 0) {
-            return;
-        }
-        for (int i = 0; i < getScreenHeight(ctx) / step; i++) {
-            mCanvas.drawLine(0, 0 + step * i, getScreenWidth(ctx), 0 + step * i, getPaint());
-        }
-        for (int i = 0; i < getScreenWidth(ctx) / step; i++) {
-            mCanvas.drawLine(0 + step * i, 0, 0 + step * i, getScreenHeight(ctx), getPaint());
-        }
-    }
-
-    /**
-     * 绘制直角坐标系
-     *
-     * @param coo    坐标原点
-     * @param line_h 小线高
-     * @param step   小线间隔（像素）
-     */
-    public void drawCoord(Pos coo, float line_h, float step, Context ctx) {
-        Pos COO = coo;//坐标原点
-        float LINE_H = line_h;//小线高
-        float STEP = step;//小线间隔（像素）
-        drawLines(new Painter().ps(new Pos(-COO.x, 0)
-                , new Pos(getScreenWidth(ctx) - coo.x, 0)).ss(Color.BLACK).coo(COO));
-
-//
-        for (int i = 1; i < getScreenWidth(ctx) / STEP; i++) {
-            drawLines(
-                    new Painter().ps(new Pos(-COO.x + STEP * i, 0)
-                            , new Pos(-COO.x + STEP * i, LINE_H)).ss(Color.BLACK).coo(COO));
-        }
-
-//        drawLines(new Painter().ps(
-//                new Pos(0, -COO.y)
-//                , new Pos(0, -COO.y + getScreenHeight(ctx)))
-//                .coo(COO).ss(Color.BLACK).dp(ctx));
-
-        for (int i = 1; i < getScreenHeight(ctx) / STEP; i++) {
-            drawLines(
-                    new Painter().
-                            ps(new Pos(0, (COO.y - getScreenHeight(ctx)+ STEP * i))
-                            , new Pos(LINE_H, (COO.y - getScreenHeight(ctx) + STEP * i)))
-                            .ss(Color.BLACK)
-                            .coo(COO));
-//
-
-        }
-    }
-
-
-    /**
-     * 获得屏幕高度
-     *
-     * @return 屏幕高度
-     */
-    public static int getScreenWidth(Context ctx) {
-        WindowManager wm = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics outMetrics = new DisplayMetrics();
-        wm.getDefaultDisplay().getMetrics(outMetrics);
-        return outMetrics.widthPixels;
-    }
-
-    /**
-     * 获得屏幕宽度
-     *
-     * @return 屏幕宽度
-     */
-    public static int getScreenHeight(Context ctx) {
-        WindowManager wm = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics outMetrics = new DisplayMetrics();
-        wm.getDefaultDisplay().getMetrics(outMetrics);
-        return outMetrics.heightPixels;
     }
 
     //////////////////////////////////画板准备完成监听
