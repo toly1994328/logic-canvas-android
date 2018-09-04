@@ -32,8 +32,8 @@ implementation 'com.github.toly1994328:logic-canvas-android:0.01'
 ##### 在自定义View的onDraw方法中：绘制外接圆半径100,内接圆半径50的5角星
 ```
 Painter painter = new Painter(canvas);
-painter.drawNStar(
-    new Painter()
+painter.draw(
+    new ShapeStar()
             .num(5)//角的个数,数字任意
             .R(100f)//外接圆半径
             .r(50f)////内接圆半径
@@ -44,7 +44,7 @@ painter.drawNStar(
 ---
 
 #### 二、公有属性演示：注：公共属性对应的函数在后调用
->所谓公有属性是指所有绘制图形适用的属性：包括  
+>所谓公有属性是指所有绘制图形适用的属性：包括
 线条粗细(b)、线条颜色(ss)、填充颜色(ss)、
 位移(p)、坐标系(coo)、旋转(rot)、缩放(sx,sy)屏幕适配dp单位(dp)
 
@@ -62,8 +62,8 @@ fs | "#0000ff"|填充样式|-
 dir|逆时针方向|-
 
 ##### 1.位移：
->p 参数类型：Pos  
-注：为了和数学更好契合，采用笛卡尔坐标系(上右正)，默认屏幕左上角(0,0)点  
+>p 参数类型：Pos
+注：为了和数学更好契合，采用笛卡尔坐标系(上右正)，默认屏幕左上角(0,0)点
 为了明显，使用工具栏绘制网格参考
 
 ```
@@ -79,7 +79,7 @@ painter.draw(new ShapeStar()
 
 ##### 2.坐标系：为了支持坐标系，可是煞费苦心啊！
 >coo 参数类型：Pos
-为了明显，使用工具栏绘制坐标系参考  
+为了明显，使用工具栏绘制坐标系参考
 注意：使用坐标系后、平移、旋转、缩放都会根据新的坐标系来
 
 ```
@@ -186,15 +186,15 @@ painter.draw(new ShapeStar()
 
 ---
 
->公共属性展示到这里，持续更新，敬请关注  
-更新时间：2018-09-12：10:25  
+>公共属性展示到这里，持续更新，敬请关注
+更新时间：2018-09-12：10:25
 [LogicCanvas-项目地址：github](https://github.com/toly1994328/logic-canvas-android)
 
 
 ---
 
 #### 二、直线绘制：
->特有属性：ps 参数类型 不定个数的Pos。  
+>特有属性：ps 参数类型 不定个数的Pos。
 再次强调：默认使用的是0,0为原点的笛卡尔坐标系
 
 ##### 1.单线条
@@ -232,13 +232,13 @@ painter.draw(
 ---
 
 #### 三、绘制矩形：
->参数 ： x 矩形宽  
-y:矩形高  
+>参数 ： x 矩形宽
+y:矩形高
 r:矩形圆角
 
 
 ```
-painter.drawRect(
+painter.draw(
         new ShapeRect()
                 .x(1000/2f).y(618/2f).r(50f)
                 .b(5f).ss(Color.RED).p(new Pos(100,-100))
@@ -248,13 +248,13 @@ painter.drawRect(
 
 
 ---
-#### 四、画圆： 
->dir true 逆时针方向绘制--默认  
+#### 四、画圆：
+>dir true 逆时针方向绘制--默认
 r 半径
 
 ```
-painter.drawCircle(
-        new Painter()
+painter.draw(
+        new ShapeArc(1)
                 .r(100f)
                 .b(5f).ss(Color.RED)
                 .p(new Pos(200,-200))
@@ -266,8 +266,8 @@ painter.drawCircle(
 #### 五、绘制弧线
 
 ```
-painter.drawArc(
-        new Painter()
+painter.draw(
+        new ShapeArc()
                 .r(100f).ang(135f)
                 .b(1f).ss(Color.RED)
                 .p(new Pos(200,-100))
@@ -281,16 +281,16 @@ painter.drawArc(
 
 ```
 for (int i = 5; i < 10; i++) {
-    painter.drawRegularPolygon(
-            new Painter()
+    painter.draw(
+            new ShapeStar(ShapeStar.MODE_POLYGON)
                     .num(i).R(80f)
                     .b(4f)
-                    .p(new Pos(20+210*(i-5),-20)));
-    painter.drawRegularStar(
-            new Painter()
+                    .p(new Pos(20+210*(i-5),-20)));//内接圆半径
+    painter.draw(
+            new ShapeStar(ShapeStar.MODE_REGULAR)
                     .num(i).R(80f)
                     .b(4f)
-                    .p(new Pos(20+210*(i-5),-220)));
+                    .p(new Pos(20+210*(i-5),-220)));//内接圆半径
 }
 ```
 
@@ -298,12 +298,47 @@ for (int i = 5; i < 10; i++) {
 
 ![多角星分析图](https://upload-images.jianshu.io/upload_images/9414344-deffb348a52faa88.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
->展示到这里，持续更新，更多功能敬请期待  
-更新时间：2018-09-12：13:25  
+>展示到这里，持续更新，更多功能敬请期待
+更新时间：2018-09-12：13:25
 [LogicCanvas-项目地址：github](https://github.com/toly1994328/logic-canvas-android)
+
+---
+#### 第三更：LogicCanvas与Android原生Path结核使用
+
+```
+Path path = new Path();// 创建Path
+path.lineTo(200, -200);// lineTo
+path.lineTo(200,0);
+path.close();
+Shape shapeEmpty = new ShapeEmpty(path)
+        .b(6f).coo(400f, 400f);
+painter.draw(shapeEmpty);
+```
+
+![与安卓Path结合.png](https://upload-images.jianshu.io/upload_images/9414344-abf35b857368d293.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
 ---
 
->本文由张风捷特烈原创,转载请注明  
-[更多安卓技术欢迎访问：](https://www.jianshu.com/c/004f3fe34c94)https://www.jianshu.com/c/004f3fe34c94   
-[张风捷特烈个人网站，编程笔记请访问：](http://www.toly1994.com)http://www.toly1994.com  
-你的喜欢与支持将是我最大的动力  
+
+#### 后记、
+##### 1.声明：
+>[1]本文由张风捷特烈原创,转载请注明
+[2]欢迎广大编程爱好者共同交流
+[3]个人能力有限，如有不正之处欢迎大家批评指证，必定虚心改正
+[4]你的喜欢与支持将是我最大的动力
+
+##### 2.连接传送门：
+[更多安卓技术欢迎访问:安卓技术栈](https://www.jianshu.com/c/004f3fe34c94)
+[我的github地址：欢迎star](https://github.com/toly1994328)
+[简书首发，腾讯云+社区同步更新](https://cloud.tencent.com/developer/user/2608304)
+[张风捷特烈个人网站，编程笔记请访问：](http://www.toly1994.com)http://www.toly1994.com
+
+
+##### 3.联系我
+>QQ:1981462002
+邮箱：1981462002@qq.com
+微信：zdl1994328
+
+##### 4.欢迎关注我的微信公众号，最新精彩文章，及时送达：
+![公众号.jpg](https://upload-images.jianshu.io/upload_images/9414344-c474349cd3bd4b82.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
