@@ -23,7 +23,7 @@ allprojects {
 	}
 }
 	
-implementation 'com.github.toly1994328:logic-canvas-android:0.01'
+implementation 'com.github.toly1994328:logic-canvas-android:0.02'
 ```
 
 ---
