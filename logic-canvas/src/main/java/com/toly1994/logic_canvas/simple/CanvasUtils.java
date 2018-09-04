@@ -6,9 +6,9 @@ import android.graphics.Color;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
-import com.toly1994.logic_canvas.bean.Painter;
 import com.toly1994.logic_canvas.bean.Pos;
-import com.toly1994.logic_canvas.core.ZCanvas;
+import com.toly1994.logic_canvas.core.Painter;
+import com.toly1994.logic_canvas.core.shape.ShapeLine;
 
 /**
  * 作者：张风捷特烈<br/>
@@ -26,24 +26,24 @@ public class CanvasUtils {
      * @param canvas 画布
      */
     public static void drawGrid(Context ctx, int step, Canvas canvas) {
-        ZCanvas zCanvas = new ZCanvas(canvas);
+        Painter painter = new Painter(canvas);
         if (step == 0) {
             return;
         }
         //横线
         for (int i = 0; i < getScreenHeight(ctx) / step; i++) {
-            zCanvas.drawLines(
-                    new Painter()
-                            .ss(Color.GRAY).b(2f)
+            painter.draw(
+                    new ShapeLine()
                             .ps(new Pos(0f, 0f - step * i), new Pos(getScreenWidth(ctx) + 0F, 0f - step * i))
+                            .ss(Color.GRAY).b(2f)
             );
         }
         //竖线
         for (int i = 0; i <= getScreenWidth(ctx) / step; i++) {
-            zCanvas.drawLines(
-                    new Painter()
-                            .ss(Color.GRAY).b(2f)
+            painter.draw(
+                    new ShapeLine()
                             .ps(new Pos(0f + step * i, 0f), new Pos(0f + step * i, 0f - getScreenHeight(ctx)))
+                            .ss(Color.GRAY).b(2f)
             );
         }
     }
@@ -51,43 +51,67 @@ public class CanvasUtils {
     /**
      * @param ctx    上下文
      * @param coo    坐标系原点
-     * @param line_h 小线高
      * @param step   小线间隔（像素）
      * @param canvas 画布
      */
-    public static void drawCoord(Context ctx, Pos coo, float line_h, float step, Canvas canvas) {
-        ZCanvas zCanvas = new ZCanvas(canvas);
-        Pos COO = coo;//坐标原点
-        float LINE_H = line_h;//小线高
-        float STEP = step;//小线间隔（像素）
-        zCanvas.drawLines(
-                new Painter()
-                        .ps(new Pos(-COO.x, 0),
-                                new Pos(getScreenWidth(ctx) - coo.x, 0))
-                        .ss(Color.BLACK)
-                        .coo(COO));
+    public static void drawCoord(Context ctx, Pos coo, float step, Canvas canvas) {
 
-//
-        for (int i = 1; i < getScreenWidth(ctx) / STEP; i++) {
-            zCanvas.drawLines(
-                    new Painter()
-                            .ps(new Pos(-COO.x + STEP * i, 0),
-                                    new Pos(-COO.x + STEP * i, LINE_H)).
-                            ss(Color.BLACK)
-                            .coo(COO));
+        Painter painter = new Painter(canvas);
+
+        int cooColor = Color.BLACK;
+        Float lineHeight = dp2px(ctx, 4f);
+        int winH = getScreenHeight(ctx);
+        int winW = getScreenWidth(ctx);
+
+        //横线
+        painter.draw(new ShapeLine()
+                .ps(new Pos(-coo.x, 0), new Pos(winW - coo.x, 0))
+                .ss(cooColor).coo(coo));
+        //竖线
+        painter.draw(new ShapeLine()
+                .ps(new Pos(0, -(winH - coo.y)), new Pos(0, coo.y))
+                .ss(cooColor).coo(coo));
+
+        //右侧小线
+        for (int i = 1; i < (winW - coo.x) / step; i++) {
+            painter.draw(new ShapeLine()
+                    .ps(new Pos(step * i, 0), new Pos(step * i, lineHeight)).
+                            ss(cooColor).coo(coo));
         }
-
-
-        for (int i = 1; i < getScreenHeight(ctx) / STEP; i++) {
-            zCanvas.drawLines(
-                    new Painter().
-                            ps(new Pos(0, (COO.y - getScreenHeight(ctx) + STEP * i)),
-                                    new Pos(LINE_H, (COO.y - getScreenHeight(ctx) + STEP * i)))
-                            .ss(Color.BLACK)
-                            .coo(COO));
-//
-
+        //左侧小线
+        for (int i = 1; i < coo.x / step; i++) {
+            painter.draw(new ShapeLine()
+                    .ps(new Pos(-step * i, 0), new Pos(-step * i, lineHeight)).
+                            ss(cooColor).coo(coo));
         }
+        //上侧小线
+        for (int i = 1; i < coo.y / step; i++) {
+            painter.draw(
+                    new ShapeLine()
+                            .ps(new Pos(0, step * i), new Pos(lineHeight, step * i)).
+                            ss(cooColor).coo(coo));
+        }
+        //下侧小线
+        for (int i = 1; i < (winH - coo.y) / step; i++) {
+            painter.draw(new ShapeLine()
+                    .ps(new Pos(0, -step * i), new Pos(lineHeight, -step * i)).
+                            ss(cooColor).coo(coo));
+        }
+        //右小箭头
+        painter.draw(new ShapeLine().ps(
+                new Pos(winW - coo.x - lineHeight * 2, lineHeight),
+                new Pos(winW - coo.x - lineHeight * 2, -lineHeight),
+                new Pos(winW - coo.x, 0),
+                new Pos(winW - coo.x - lineHeight * 2, lineHeight)
+        ).fs(cooColor).coo(coo));
+
+        //右小箭头
+        painter.draw(new ShapeLine().ps(
+                new Pos(lineHeight, coo.y - lineHeight * 2),
+                new Pos(-lineHeight, coo.y - lineHeight * 2),
+                new Pos(0, coo.y),
+                new Pos(lineHeight, coo.y - lineHeight * 2)
+        ).fs(cooColor).coo(coo));
     }
 
     /**
@@ -112,5 +136,19 @@ public class CanvasUtils {
         DisplayMetrics outMetrics = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(outMetrics);
         return outMetrics.heightPixels;
+    }
+
+    /**
+     * 适配dp
+     *
+     * @param dp
+     * @return
+     */
+    public static Float dp2px(Context ctx, Float dp) {
+        if (dp != null) {
+            final Float scale = ctx.getResources().getDisplayMetrics().density;
+            return dp * scale + 0.5f;
+        }
+        return dp;
     }
 }

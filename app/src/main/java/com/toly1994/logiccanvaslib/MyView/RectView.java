@@ -7,9 +7,9 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.toly1994.logic_canvas.bean.Painter;
 import com.toly1994.logic_canvas.bean.Pos;
-import com.toly1994.logic_canvas.core.ZCanvas;
+import com.toly1994.logic_canvas.core.Painter;
+import com.toly1994.logic_canvas.core.shape.ShapeRect;
 import com.toly1994.logic_canvas.simple.CanvasUtils;
 
 /**
@@ -35,16 +35,16 @@ public class RectView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        final ZCanvas zCanvas = new ZCanvas(canvas);
+        final Painter painter = new Painter(canvas);
 
-        zCanvas.drawRect(
-                new Painter()
+        painter.draw(
+                new ShapeRect()
                         .x(1000/2f).y(618/2f).r(50f)
                         .b(5f).ss(Color.RED).fs(Color.GRAY)
                         .p(new Pos(100,-100))
         );
 
-//        zCanvas.drawLines(
+//        painter.drawLines(
 //                new Painter()
 //                        .b(5f)
 //                        .ps(
@@ -63,7 +63,7 @@ public class RectView extends View {
 //                .c(300F)
 //                .ang(45f)
 //                .p(500f,-500f);
-//        zCanvas.drawLine(
+//        painter.drawLine(
 //                ang
 //
 //        );

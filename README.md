@@ -5,6 +5,10 @@ HTML5感觉和Android的canvas挺相似，所以考虑移植过来。
 绘图库核心是用配置信息绘图，通过逻辑运算绘图  
 本篇会持续更新，记录LogicCanvas的成长历程  
 
+##### 2018年9月4号更新：由V0.01升级到V0.02  
+>对项目进行大规模重构，分解ShapePath类,优化调用形式，更好解耦  
+由于边线而导致的精准度问题已修正
+加入刚刚属性：路径的方向，代号：dir
 
 
 ##### 原理简单示意图：
@@ -25,10 +29,10 @@ implementation 'com.github.toly1994328:logic-canvas-android:0.01'
 ---
 #### 一、以一个五角星来引入
 
-##### 在自定义View的onDraw方法中：绘制外接圆半径100,内接圆半径50，填充色黄色的5角星
+##### 在自定义View的onDraw方法中：绘制外接圆半径100,内接圆半径50的5角星
 ```
-ZCanvas zCanvas = new ZCanvas(canvas);
-zCanvas.drawNStar(
+Painter painter = new Painter(canvas);
+painter.drawNStar(
     new Painter()
             .num(5)//角的个数,数字任意
             .R(100f)//外接圆半径
@@ -39,7 +43,7 @@ zCanvas.drawNStar(
 
 ---
 
-#### 二、公有属性演示：
+#### 二、公有属性演示：注：公共属性对应的函数在后调用
 >所谓公有属性是指所有绘制图形适用的属性：包括  
 线条粗细(b)、线条颜色(ss)、填充颜色(ss)、
 位移(p)、坐标系(coo)、旋转(rot)、缩放(sx,sy)屏幕适配dp单位(dp)
@@ -55,7 +59,7 @@ a | Pos(0,0)|修改锚点|
 b | 1|线条粗|
 ss | "#000000"|线条样式|-
 fs | "#0000ff"|填充样式|-
-dp | -|dp单位|在链式末尾调用
+dir|逆时针方向|-
 
 ##### 1.位移：
 >p 参数类型：Pos  
@@ -63,7 +67,7 @@ dp | -|dp单位|在链式末尾调用
 为了明显，使用工具栏绘制网格参考
 
 ```
-zCanvas.drawNStar(new Painter()
+painter.draw(new ShapeStar()
         .num(5)
         .R(100f)
         .r(50f)
@@ -79,7 +83,7 @@ zCanvas.drawNStar(new Painter()
 注意：使用坐标系后、平移、旋转、缩放都会根据新的坐标系来
 
 ```
-zCanvas.drawNStar(new Painter()
+painter.draw(new ShapeStar()
         .num(5)
         .R(100f)
         .r(50f)
@@ -96,7 +100,7 @@ zCanvas.drawNStar(new Painter()
 b 描边粗细 参数类型：int
 
 ```
-zCanvas.drawNStar(new Painter()
+painter.draw(new ShapeStar()
         .num(5)
         .R(100f)
         .r(50f)
@@ -113,7 +117,7 @@ zCanvas.drawNStar(new Painter()
 >rot 旋转 参数类型：Float
 
 ```
-zCanvas.drawNStar(new Painter()
+painter.draw(new ShapeStar()
         .num(5)
         .R(100f)
         .r(50f)
@@ -131,7 +135,7 @@ zCanvas.drawNStar(new Painter()
 >sx、sy 缩放比例 参数类型：Float
 
 ```
-zCanvas.drawNStar(new Painter()
+painter.draw(new ShapeStar()
         .num(5)
         .R(100f)
         .r(50f)
@@ -149,7 +153,7 @@ zCanvas.drawNStar(new Painter()
 >coo 参数类型：Pos
 
 ```
-zCanvas.drawNStar(new Painter()
+painter.draw(new ShapeStar()
         .num(5)
         .R(100f)
         .r(50f)
@@ -169,7 +173,7 @@ zCanvas.drawNStar(new Painter()
 >fs 描边颜色 参数类型：int (颜色)
 
 ```
-zCanvas.drawNStar(new Painter()
+painter.draw(new ShapeStar()
         .num(5)
         .R(100f)
         .r(50f)
@@ -181,20 +185,6 @@ zCanvas.drawNStar(new Painter()
 ![填充.png](https://upload-images.jianshu.io/upload_images/9414344-295746c05353d5d0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ---
-##### 8.dp单位适配
->下面蓝色是没有适配的，黄色是适配的，蓝色在不同分辨率产生差异，黄色则正常显示
-
-```
-zCanvas.drawNStar(new Painter()
-        .num(5)
-        .R(20f)
-        .r(10f)
-        .fs(Color.YELLOW)
-        .dp(mContext)
-);
-```
-
-![dp适配.png](https://upload-images.jianshu.io/upload_images/9414344-340c411d65170bfa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 >公共属性展示到这里，持续更新，敬请关注  
 更新时间：2018-09-12：10:25  
@@ -210,11 +200,11 @@ zCanvas.drawNStar(new Painter()
 ##### 1.单线条
 
 ```
- zCanvas.drawLines(
-         new Painter()
-                 .b(5f)
-                 .ps(new Pos(0, 0), new Pos(200, -200))
- );
+painter.draw(
+        new ShapeLine()
+                .ps(new Pos(0, 0), new Pos(200, -200))
+                .b(5f)
+);
 ```
 
 ![绘制单直线.png](https://upload-images.jianshu.io/upload_images/9414344-2baec141a58dc594.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
@@ -224,9 +214,8 @@ zCanvas.drawNStar(new Painter()
 ##### 2.多线条
 
 ```
-zCanvas.drawLines(
-        new Painter()
-                .b(5f)
+painter.draw(
+        new ShapeLine()
                 .ps(
                         new Pos(0, 0),
                         new Pos(200, -200),
@@ -234,7 +223,7 @@ zCanvas.drawLines(
                         new Pos(200,-400),
                         new Pos(800,-400),
                         new Pos(0,0)
-                )
+                ).b(5f)
 );
 ```
 
@@ -249,8 +238,8 @@ r:矩形圆角
 
 
 ```
-zCanvas.drawRect(
-        new Painter()
+painter.drawRect(
+        new ShapeRect()
                 .x(1000/2f).y(618/2f).r(50f)
                 .b(5f).ss(Color.RED).p(new Pos(100,-100))
 );
@@ -264,7 +253,7 @@ zCanvas.drawRect(
 r 半径
 
 ```
-zCanvas.drawCircle(
+painter.drawCircle(
         new Painter()
                 .r(100f)
                 .b(5f).ss(Color.RED)
@@ -277,7 +266,7 @@ zCanvas.drawCircle(
 #### 五、绘制弧线
 
 ```
-zCanvas.drawArc(
+painter.drawArc(
         new Painter()
                 .r(100f).ang(135f)
                 .b(1f).ss(Color.RED)
@@ -292,12 +281,12 @@ zCanvas.drawArc(
 
 ```
 for (int i = 5; i < 10; i++) {
-    zCanvas.drawRegularPolygon(
+    painter.drawRegularPolygon(
             new Painter()
                     .num(i).R(80f)
                     .b(4f)
                     .p(new Pos(20+210*(i-5),-20)));
-    zCanvas.drawRegularStar(
+    painter.drawRegularStar(
             new Painter()
                     .num(i).R(80f)
                     .b(4f)

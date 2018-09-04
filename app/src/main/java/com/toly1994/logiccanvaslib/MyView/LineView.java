@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.toly1994.logic_canvas.core.ZCanvas;
+import com.toly1994.logic_canvas.core.Painter;
 import com.toly1994.logic_canvas.simple.CanvasUtils;
 
 /**
@@ -32,17 +32,16 @@ public class LineView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        final ZCanvas zCanvas = new ZCanvas(canvas);
+        final Painter painter = new Painter(canvas);
 
-//        zCanvas.drawLines(
-//                new Painter()
-//                        .b(5f)
+//        painter.draw(
+//                new ShapeLine()
 //                        .ps(new Pos(0, 0), new Pos(200, -200))
+//                        .b(5f)
 //        );
 
-//        zCanvas.drawLines(
-//                new Painter()
-//                        .b(5f)
+//        painter.draw(
+//                new ShapeLine()
 //                        .ps(
 //                                new Pos(0, 0),
 //                                new Pos(200, -200),
@@ -50,8 +49,9 @@ public class LineView extends View {
 //                                new Pos(200,-400),
 //                                new Pos(800,-400),
 //                                new Pos(0,0)
-//                        )
+//                        ).b(5f)
 //        );
+
 //
 //        Painter ang = new Painter()
 //                .b(5f)
@@ -59,7 +59,7 @@ public class LineView extends View {
 //                .c(300F)
 //                .ang(45f)
 //                .p(500f,-500f);
-//        zCanvas.drawLine(
+//        painter.drawLine(
 //                ang
 //
 //        );

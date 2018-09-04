@@ -6,9 +6,9 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.toly1994.logic_canvas.bean.Painter;
 import com.toly1994.logic_canvas.bean.Pos;
-import com.toly1994.logic_canvas.core.ZCanvas;
+import com.toly1994.logic_canvas.core.Painter;
+import com.toly1994.logic_canvas.core.shape.ShapeStar;
 import com.toly1994.logic_canvas.simple.CanvasUtils;
 
 /**
@@ -34,53 +34,52 @@ public class LogicView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        final ZCanvas zCanvas = new ZCanvas(canvas);
+        final Painter painter = new Painter(canvas);
 
         for (int i = 5; i < 10; i++) {
-            zCanvas.drawRegularPolygon(
-                    new Painter()
+            painter.draw(
+                    new ShapeStar(ShapeStar.MODE_POLYGON)
                             .num(i).R(80f)
                             .b(4f)
                             .p(new Pos(20+210*(i-5),-20)));//内接圆半径
 
-            zCanvas.drawRegularStar(
-                    new Painter()
+            painter.draw(
+                    new ShapeStar(ShapeStar.MODE_REGULAR)
                             .num(i).R(80f)
                             .b(4f)
                             .p(new Pos(20+210*(i-5),-220)));//内接圆半径
-
         }
 
-//        zCanvas.drawNStar(new Painter()
-//                .num(5)
-//                .R(20f)
-//                .r(10f))
-//        ;
+//        //测试1：绘制外接圆半径100,内接圆半径50的5角星
+//        painter.draw(
+//                new ShapeStar()
+//                        .num(6)//角的个数,数字任意
+//                        .R(100f)//外接圆半径
+//                        .r(50f));////内接圆半径
 
-
-//        zCanvas.drawNStar(new Painter()
+//        painter.draw(new ShapeStar()
 //                .num(5)
 //                .R(100f)
 //                .r(50f)
 //                .p(new Pos(200, -100)));//位移X,Y
 
-//        zCanvas.drawNStar(new Painter()
+//        painter.draw(new ShapeStar()
 //                .num(5)
 //                .R(100f)
 //                .r(50f)
 //                .coo(new Pos(600, 200))//设置坐标系
 //        );
 
-//        zCanvas.drawNStar(new Painter()
+//        painter.draw(new ShapeStar()
 //                .num(5)
 //                .R(100f)
 //                .r(50f)
-//                .p(new Pos(200, -100))//设置坐标系
+//                .p(new Pos(200, -100))
 //                .ss(Color.RED)//描边颜色
 //                .b(5f)//描边线条粗细
 //        );
 
-//        zCanvas.drawNStar(new Painter()
+//        painter.draw(new ShapeStar()
 //                .num(5)
 //                .R(100f)
 //                .r(50f)
@@ -89,7 +88,7 @@ public class LogicView extends View {
 //                .rot(90f)//设置旋转
 //        );
 
-//        zCanvas.drawNStar(new Painter()
+//        painter.draw(new ShapeStar()
 //                .num(5)
 //                .R(100f)
 //                .r(50f)
@@ -99,7 +98,7 @@ public class LogicView extends View {
 //                .sy(1.5f)
 //        );
 
-//        zCanvas.drawNStar(new Painter()
+//        painter.draw(new ShapeStar()
 //                .num(5)
 //                .R(100f)
 //                .r(50f)
@@ -110,23 +109,17 @@ public class LogicView extends View {
 //                .sy(1.5f)
 //        );
 
-//        zCanvas.drawNStar(new Painter()
-//                .num(5)
-//                .R(20f)
-//                .r(10f)
-//                .fs(Color.YELLOW)
-//                .dp(mContext)
-//        );
-
-//        zCanvas.drawNStar(new Painter()
+//        painter.draw(new ShapeStar()
 //                .num(5)
 //                .R(100f)
 //                .r(50f)
+//                .coo(new Pos(600, 200))
 //                .fs(Color.YELLOW)
-//                .dp(mContext));
+//        );
+
         //绘制网格
-        CanvasUtils.drawGrid(mContext,50,canvas);
+//        CanvasUtils.drawGrid(mContext,50,canvas);
 //        //绘制坐标系
-//        CanvasUtils.drawCoord(mContext, new Pos(600, 200), 10, 50, canvas);
+        CanvasUtils.drawCoord(mContext, new Pos(600, 200),  50, canvas);
     }
 }

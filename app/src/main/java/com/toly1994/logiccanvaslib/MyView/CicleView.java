@@ -7,9 +7,9 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.toly1994.logic_canvas.bean.Painter;
 import com.toly1994.logic_canvas.bean.Pos;
-import com.toly1994.logic_canvas.core.ZCanvas;
+import com.toly1994.logic_canvas.core.Painter;
+import com.toly1994.logic_canvas.core.shape.ShapeArc;
 import com.toly1994.logic_canvas.simple.CanvasUtils;
 
 /**
@@ -35,23 +35,24 @@ public class CicleView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        final ZCanvas zCanvas = new ZCanvas(canvas);
+        final Painter painter = new Painter(canvas);
 
-//        zCanvas.drawCircle(
-//                new Painter()
-//                        .r(100f)
-//                        .b(5f).ss(Color.RED)
-//                        .p(new Pos(200,-200))
-//        );
-        zCanvas.drawArc(
-                new Painter()
-                        .r(100f).ang(135f)
-                        .b(1f).ss(Color.RED)
-                        .p(new Pos(200,-100))
+        painter.draw(
+                new ShapeArc(1)
+                        .r(100f)
+                        .b(5f).ss(Color.RED)
+                        .p(new Pos(200,-200))
         );
 
+//        painter.draw(
+//                new ShapeArc()
+//                        .r(100f).ang(135f)
+//                        .b(4f).ss(Color.RED)
+//                        .coo(new Pos(400, 400))
+//        );
 
 
-        CanvasUtils.drawGrid(mContext,50,canvas);
+        CanvasUtils.drawGrid(mContext, 50, canvas);
+        CanvasUtils.drawCoord(mContext, new Pos(400, 400), 50, canvas);
     }
 }
