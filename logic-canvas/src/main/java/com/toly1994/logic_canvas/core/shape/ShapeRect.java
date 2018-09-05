@@ -3,6 +3,8 @@ package com.toly1994.logic_canvas.core.shape;
 import android.graphics.Path;
 import android.graphics.RectF;
 
+import com.toly1994.logic_canvas.bean.Pos;
+
 /**
  * 作者：张风捷特烈<br/>
  * 时间：2018/9/4 0004:9:31<br/>
@@ -30,22 +32,39 @@ public class ShapeRect extends Shape {
         Path path = new Path();
         float width = this.mx - this.mb;
         float height = this.my - this.mb;
+
+
         float r = this.mr;
 
-        if (2 * r > width || 2 * r > height) {
-            return null;
-        }
+//        path.addRect(0, 0, width, height, CW);
+        RectF rectF = new RectF(0, 0, width, height);
+        path.addRoundRect(rectF, r, r, Path.Direction.CW);
 
-        path.addArc(new RectF(0, 0, 2 * r, 2 * r), 180, 90);
-        path.lineTo(width - r, 0);
-        path.addArc(new RectF(width - 2 * r, 0, width, 2 * r), -90, 90);
-        path.lineTo(width, height - r);
-        path.addArc(new RectF(width - 2 * r, height - 2 * r, width, height), 0, 90);
-        path.lineTo(r, height);
-        path.addArc(new RectF(0, height - 2 * r, 2 * r, height), 90, 90);
-        path.lineTo(0, r);
+//        if (2 * r > width || 2 * r > height) {
+//            return null;
+//        }
+//
+//        path.addArc(new RectF(0, 0, 2 * r, 2 * r), 180, 90);
+//        path.lineTo(width - r, 0);
+//        path.addArc(new RectF(width - 2 * r, 0, width, 2 * r), -90, 90);
+//        path.lineTo(width, height - r);
+//        path.addArc(new RectF(width - 2 * r, height - 2 * r, width, height), 0, 90);
+//        path.lineTo(r, height);
+//        path.addArc(new RectF(0, height - 2 * r, 2 * r, height), 90, 90);
+//        path.lineTo(0, r);
 
         return path;
+    }
+
+    @Override
+    public Shape p(Pos p) {
+        mp.add(new Pos(0, this.my - this.mb));
+        return super.p(p);
+    }
+
+    @Override
+    public Shape p(Float x, Float y) {
+        return super.p(x, y + this.my - this.mb);
     }
 
     public ShapeRect x(Float mx) {

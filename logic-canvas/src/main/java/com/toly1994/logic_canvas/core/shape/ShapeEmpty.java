@@ -12,6 +12,9 @@ public class ShapeEmpty extends Shape {
 
     private Path mPath;
 
+    public ShapeEmpty() {
+    }
+
     public ShapeEmpty(Path path) {
         mPath = path;
     }

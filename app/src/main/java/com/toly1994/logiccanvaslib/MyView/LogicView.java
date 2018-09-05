@@ -21,6 +21,7 @@ public class LogicView extends View {
 
 
     private Context mContext;
+    private Pos pos = Pos.init();
 
     public LogicView(Context context) {
         super(context);
@@ -41,13 +42,13 @@ public class LogicView extends View {
                     new ShapeStar(ShapeStar.MODE_POLYGON)
                             .num(i).R(80f)
                             .b(4f)
-                            .p(new Pos(20+210*(i-5),-20)));//内接圆半径
+                            .p(pos.form(20+210*(i-5),-20)));//内接圆半径
 
             painter.draw(
                     new ShapeStar(ShapeStar.MODE_REGULAR)
                             .num(i).R(80f)
                             .b(4f)
-                            .p(new Pos(20+210*(i-5),-220)));//内接圆半径
+                            .p(pos.form(20+210*(i-5),-220)));//内接圆半径
         }
 
 //        //测试1：绘制外接圆半径100,内接圆半径50的5角星
@@ -61,20 +62,20 @@ public class LogicView extends View {
 //                .num(5)
 //                .R(100f)
 //                .r(50f)
-//                .p(new Pos(200, -100)));//位移X,Y
+//                .p(pos.form(200, -100)));//位移X,Y
 
 //        painter.draw(new ShapeStar()
 //                .num(5)
 //                .R(100f)
 //                .r(50f)
-//                .coo(new Pos(600, 200))//设置坐标系
+//                .coo(pos.form(600, 200))//设置坐标系
 //        );
 
 //        painter.draw(new ShapeStar()
 //                .num(5)
 //                .R(100f)
 //                .r(50f)
-//                .p(new Pos(200, -100))
+//                .p(pos.form(200, -100))
 //                .ss(Color.RED)//描边颜色
 //                .b(5f)//描边线条粗细
 //        );
@@ -84,7 +85,7 @@ public class LogicView extends View {
 //                .R(100f)
 //                .r(50f)
 //                .ss(Color.RED)
-//                .coo(new Pos(600, 200))
+//                .coo(pos.form(600, 200))
 //                .rot(90f)//设置旋转
 //        );
 
@@ -93,7 +94,7 @@ public class LogicView extends View {
 //                .R(100f)
 //                .r(50f)
 //                .ss(Color.RED)
-//                .coo(new Pos(600, 200))
+//                .coo(pos.form(600, 200))
 //                .sx(1.5f)
 //                .sy(1.5f)
 //        );
@@ -103,8 +104,8 @@ public class LogicView extends View {
 //                .R(100f)
 //                .r(50f)
 //                .ss(Color.RED)
-//                .coo(new Pos(600, 200))
-//                .a(new Pos(100, 100))
+//                .coo(pos.form(600, 200))
+//                .a(pos.form(100, 100))
 //                .sx(1.5f)
 //                .sy(1.5f)
 //        );
@@ -113,13 +114,13 @@ public class LogicView extends View {
 //                .num(5)
 //                .R(100f)
 //                .r(50f)
-//                .coo(new Pos(600, 200))
+//                .coo(pos.form(600, 200))
 //                .fs(Color.YELLOW)
 //        );
 
         //绘制网格
 //        CanvasUtils.drawGrid(mContext,50,canvas);
 //        //绘制坐标系
-        CanvasUtils.drawCoord(mContext, new Pos(600, 200),  50, canvas);
+        CanvasUtils.drawCoord(mContext, pos.form(600, 200),  50, canvas);
     }
 }

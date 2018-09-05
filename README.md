@@ -10,6 +10,12 @@ HTML5感觉和Android的canvas挺相似，所以考虑移植过来。
 由于边线而导致的精准度问题已修正
 加入刚刚属性：路径的方向，代号：dir
 
+##### 2018年9月5号更新：由V0.02升级到V0.03  
+>这次更新也挺厉害的，将Pos点类使用原型模式，避免很多地方都要new  
+Pos点类思想层面由点，升级到向量，实现了向量的基本用法
+加入绘制文字功能(以前竟然没发现)
+对坐标系统进行一定的优化
+
 
 ##### 原理简单示意图：
 ![绘制一个五角星的过程.png](https://upload-images.jianshu.io/upload_images/9414344-d3d56c9d028e750b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
@@ -22,11 +28,24 @@ allprojects {
 		maven { url 'https://jitpack.io' }
 	}
 }
-	
-implementation 'com.github.toly1994328:logic-canvas-android:0.01'
+
+implementation 'com.github.toly1994328:logic-canvas-android:0.03'
+```
+##### 点类Pos的使用：
+
+```
+//开始时初始化一个点对象
+private Pos pos = Pos.init();
+```
+//需要另一个点的话：就行了，使用原型，避免new对象
+```
+pos.form(x, y)
 ```
 
 ---
+
+
+
 #### 一、以一个五角星来引入
 
 ##### 在自定义View的onDraw方法中：绘制外接圆半径100,内接圆半径50的5角星
@@ -44,7 +63,7 @@ painter.draw(
 ---
 
 #### 二、公有属性演示：注：公共属性对应的函数在后调用
->所谓公有属性是指所有绘制图形适用的属性：包括
+>所谓公有属性是指所有绘制图形适用的属性：包括  
 线条粗细(b)、线条颜色(ss)、填充颜色(ss)、
 位移(p)、坐标系(coo)、旋转(rot)、缩放(sx,sy)屏幕适配dp单位(dp)
 
@@ -62,16 +81,18 @@ fs | "#0000ff"|填充样式|-
 dir|逆时针方向|-
 
 ##### 1.位移：
->p 参数类型：Pos
-注：为了和数学更好契合，采用笛卡尔坐标系(上右正)，默认屏幕左上角(0,0)点
+>p 参数类型：Pos  
+注：为了和数学更好契合，采用笛卡尔坐标系(上右正)，默认屏幕左上角(0,0)点  
 为了明显，使用工具栏绘制网格参考
 
 ```
+
+
 painter.draw(new ShapeStar()
         .num(5)
         .R(100f)
         .r(50f)
-        .p(new Pos(200, -100)));//位移X,Y
+        .p(pos.form(200, -100)));//位移X,Y
 ```
 ![位移p.png](https://upload-images.jianshu.io/upload_images/9414344-605ef0cdef854edc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
@@ -79,7 +100,7 @@ painter.draw(new ShapeStar()
 
 ##### 2.坐标系：为了支持坐标系，可是煞费苦心啊！
 >coo 参数类型：Pos
-为了明显，使用工具栏绘制坐标系参考
+为了明显，使用工具栏绘制坐标系参考  
 注意：使用坐标系后、平移、旋转、缩放都会根据新的坐标系来
 
 ```
@@ -87,7 +108,7 @@ painter.draw(new ShapeStar()
         .num(5)
         .R(100f)
         .r(50f)
-        .coo(new Pos(600, 200))//设置坐标系
+        .coo(pos.form(600, 200))//设置坐标系
 );
 ```
 
@@ -104,7 +125,7 @@ painter.draw(new ShapeStar()
         .num(5)
         .R(100f)
         .r(50f)
-        .p(new Pos(200, -100))
+        .p(pos.form(200, -100))
         .ss(Color.RED)//描边颜色
         .b(5f)//描边线条粗细
 );
@@ -122,7 +143,7 @@ painter.draw(new ShapeStar()
         .R(100f)
         .r(50f)
         .ss(Color.RED)
-        .coo(new Pos(600, 200))
+        .coo(pos.form(600, 200))
         .rot(90f)//设置旋转
 );
 ```
@@ -140,7 +161,7 @@ painter.draw(new ShapeStar()
         .R(100f)
         .r(50f)
         .ss(Color.RED)
-        .coo(new Pos(600, 200))
+        .coo(pos.form(600, 200))
         .sx(1.5f)
         .sy(1.5f)
 );
@@ -158,8 +179,8 @@ painter.draw(new ShapeStar()
         .R(100f)
         .r(50f)
         .ss(Color.RED)
-        .coo(new Pos(600, 200))
-        .a(new Pos(100, 100))
+        .coo(pos.form(600, 200))
+        .a(pos.form(100, 100))
         .sx(1.5f)
         .sy(1.5f)
 );
@@ -177,7 +198,7 @@ painter.draw(new ShapeStar()
         .num(5)
         .R(100f)
         .r(50f)
-        .coo(new Pos(600, 200))
+        .coo(pos.form(600, 200))
         .fs(Color.YELLOW)
 );
 ```
@@ -186,15 +207,15 @@ painter.draw(new ShapeStar()
 
 ---
 
->公共属性展示到这里，持续更新，敬请关注
-更新时间：2018-09-12：10:25
+>公共属性展示到这里，持续更新，敬请关注  
+更新时间：2018-09-12：10:25  
 [LogicCanvas-项目地址：github](https://github.com/toly1994328/logic-canvas-android)
 
 
 ---
 
 #### 二、直线绘制：
->特有属性：ps 参数类型 不定个数的Pos。
+>特有属性：ps 参数类型 不定个数的Pos。  
 再次强调：默认使用的是0,0为原点的笛卡尔坐标系
 
 ##### 1.单线条
@@ -202,7 +223,7 @@ painter.draw(new ShapeStar()
 ```
 painter.draw(
         new ShapeLine()
-                .ps(new Pos(0, 0), new Pos(200, -200))
+                .ps(pos.form(0, 0), pos.form(200, -200))
                 .b(5f)
 );
 ```
@@ -217,12 +238,12 @@ painter.draw(
 painter.draw(
         new ShapeLine()
                 .ps(
-                        new Pos(0, 0),
-                        new Pos(200, -200),
-                        new Pos(200,-400),
-                        new Pos(200,-400),
-                        new Pos(800,-400),
-                        new Pos(0,0)
+                        pos.form(0, 0),
+                        pos.form(200, -200),
+                        pos.form(200,-400),
+                        pos.form(200,-400),
+                        pos.form(800,-400),
+                        pos.form(0,0)
                 ).b(5f)
 );
 ```
@@ -232,8 +253,8 @@ painter.draw(
 ---
 
 #### 三、绘制矩形：
->参数 ： x 矩形宽
-y:矩形高
+>参数 ： x 矩形宽  
+y:矩形高  
 r:矩形圆角
 
 
@@ -241,15 +262,15 @@ r:矩形圆角
 painter.draw(
         new ShapeRect()
                 .x(1000/2f).y(618/2f).r(50f)
-                .b(5f).ss(Color.RED).p(new Pos(100,-100))
+                .b(5f).ss(Color.RED).p(pos.form(100,-100))
 );
 ```
 ![绘制矩形.png](https://upload-images.jianshu.io/upload_images/9414344-df6cfb5de1976f09.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 
 ---
-#### 四、画圆：
->dir true 逆时针方向绘制--默认
+#### 四、画圆： 
+>dir true 逆时针方向绘制--默认  
 r 半径
 
 ```
@@ -257,7 +278,7 @@ painter.draw(
         new ShapeArc(1)
                 .r(100f)
                 .b(5f).ss(Color.RED)
-                .p(new Pos(200,-200))
+                .p(pos.form(200,-200))
 ```
 
 ![画圆.png](https://upload-images.jianshu.io/upload_images/9414344-dce3e1ce424f962c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
@@ -270,7 +291,7 @@ painter.draw(
         new ShapeArc()
                 .r(100f).ang(135f)
                 .b(1f).ss(Color.RED)
-                .p(new Pos(200,-100))
+                .p(pos.form(200,-100))
 );
 ```
 ![绘制弧线.png](https://upload-images.jianshu.io/upload_images/9414344-679f18469de74145.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
@@ -285,12 +306,12 @@ for (int i = 5; i < 10; i++) {
             new ShapeStar(ShapeStar.MODE_POLYGON)
                     .num(i).R(80f)
                     .b(4f)
-                    .p(new Pos(20+210*(i-5),-20)));//内接圆半径
+                    .p(pos.form(20+210*(i-5),-20)));//内接圆半径
     painter.draw(
             new ShapeStar(ShapeStar.MODE_REGULAR)
                     .num(i).R(80f)
                     .b(4f)
-                    .p(new Pos(20+210*(i-5),-220)));//内接圆半径
+                    .p(pos.form(20+210*(i-5),-220)));//内接圆半径
 }
 ```
 
@@ -298,8 +319,8 @@ for (int i = 5; i < 10; i++) {
 
 ![多角星分析图](https://upload-images.jianshu.io/upload_images/9414344-deffb348a52faa88.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
->展示到这里，持续更新，更多功能敬请期待
-更新时间：2018-09-12：13:25
+>展示到这里，持续更新，更多功能敬请期待  
+更新时间：2018-09-12：13:25  
 [LogicCanvas-项目地址：github](https://github.com/toly1994328/logic-canvas-android)
 
 ---
@@ -322,23 +343,23 @@ painter.draw(shapeEmpty);
 
 #### 后记、
 ##### 1.声明：
->[1]本文由张风捷特烈原创,转载请注明
-[2]欢迎广大编程爱好者共同交流
-[3]个人能力有限，如有不正之处欢迎大家批评指证，必定虚心改正
-[4]你的喜欢与支持将是我最大的动力
+>[1]本文由张风捷特烈原创,转载请注明  
+[2]欢迎广大编程爱好者共同交流  
+[3]个人能力有限，如有不正之处欢迎大家批评指证，必定虚心改正  
+[4]你的喜欢与支持将是我最大的动力 
 
 ##### 2.连接传送门：
-[更多安卓技术欢迎访问:安卓技术栈](https://www.jianshu.com/c/004f3fe34c94)
-[我的github地址：欢迎star](https://github.com/toly1994328)
-[简书首发，腾讯云+社区同步更新](https://cloud.tencent.com/developer/user/2608304)
-[张风捷特烈个人网站，编程笔记请访问：](http://www.toly1994.com)http://www.toly1994.com
+[更多安卓技术欢迎访问:安卓技术栈](https://www.jianshu.com/c/004f3fe34c94)  
+[我的github地址：欢迎star](https://github.com/toly1994328)  
+[简书首发，腾讯云+社区同步更新](https://cloud.tencent.com/developer/user/2608304)  
+[张风捷特烈个人网站，编程笔记请访问：](http://www.toly1994.com)http://www.toly1994.com   
 
 
 ##### 3.联系我
->QQ:1981462002
-邮箱：1981462002@qq.com
-微信：zdl1994328
+>QQ:1981462002   
+邮箱：1981462002@qq.com  
+微信：zdl1994328  
 
-##### 4.欢迎关注我的微信公众号，最新精彩文章，及时送达：
+##### 4.欢迎关注我的微信公众号，最新精彩文章，及时送达：  
 ![公众号.jpg](https://upload-images.jianshu.io/upload_images/9414344-c474349cd3bd4b82.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 

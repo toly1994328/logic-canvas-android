@@ -7,6 +7,7 @@ import android.graphics.Path;
 
 import com.toly1994.logic_canvas.bean.Pos;
 import com.toly1994.logic_canvas.core.shape.Shape;
+import com.toly1994.logic_canvas.core.shape.ShapeText;
 import com.toly1994.logic_canvas.logic.Logic;
 
 
@@ -59,32 +60,42 @@ public class Painter {
         });
 
         if (mOnPrepared != null) {
-            Paint paint = new Paint();
-            paint.setAntiAlias(true);//抗锯齿
-
-            boolean isStroke = Logic.isExist(shape.mss);
-            boolean isFill = Logic.isExist(shape.mfs);
-
-            if (isStroke && !isFill) {
-                paint.setColor(shape.mss);
-                paint.setStyle(Paint.Style.STROKE);
-            }
-
-            if (isFill) {
-                paint.setColor(shape.mfs);
-                paint.setStyle(Paint.Style.FILL);
-            }
-
-            if (!isFill && !isStroke) {
-                paint.setColor(Color.BLUE);
-                paint.setStyle(Paint.Style.STROKE);
-            }
-
-            paint.setStrokeWidth((shape.mb).intValue());
-            mOnPrepared.draw(paint);
+            mOnPrepared.draw(initPaint(shape));
         }
 
         mCanvas.restore();
+    }
+
+    /**
+     * 根据shape 初始画笔
+     *
+     * @param shape Shape
+     */
+    private Paint initPaint(Shape shape) {
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);//抗锯齿
+
+        boolean isStroke = Logic.isExist(shape.mss);
+        boolean isFill = Logic.isExist(shape.mfs);
+
+        if (isStroke && !isFill) {
+            paint.setColor(shape.mss);
+            paint.setStyle(Paint.Style.STROKE);
+        }
+
+        if (isFill) {
+            paint.setColor(shape.mfs);
+            paint.setStyle(Paint.Style.FILL);
+        }
+
+        if (!isFill && !isStroke) {
+            paint.setColor(Color.BLUE);
+            paint.setStyle(Paint.Style.STROKE);
+        }
+
+        paint.setStrokeWidth((shape.mb).intValue());
+
+        return paint;
     }
 
 
@@ -114,6 +125,26 @@ public class Painter {
             info.ma = new Pos(ax, ay);
             info.mrot = rot;
         }
+    }
+
+    public void drawText(Shape shape) {
+        ShapeText tShape = (ShapeText) shape;
+
+        Paint paint = initPaint(shape);
+        paint.setTextSize((tShape.mSize));
+
+        switch (tShape.mAl) {
+            case ">":
+                paint.setTextAlign(Paint.Align.RIGHT);
+                break;
+            case "<":
+                paint.setTextAlign(Paint.Align.LEFT);
+                break;
+            default:
+                paint.setTextAlign(Paint.Align.CENTER);
+        }
+
+        mCanvas.drawText(tShape.mStr, shape.mp.x, shape.mp.y, paint);
     }
 
     //////////////////////////////////画板准备完成监听

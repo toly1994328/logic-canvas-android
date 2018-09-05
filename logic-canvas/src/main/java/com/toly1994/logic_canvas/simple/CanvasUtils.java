@@ -9,6 +9,7 @@ import android.view.WindowManager;
 import com.toly1994.logic_canvas.bean.Pos;
 import com.toly1994.logic_canvas.core.Painter;
 import com.toly1994.logic_canvas.core.shape.ShapeLine;
+import com.toly1994.logic_canvas.core.shape.ShapeText;
 
 /**
  * 作者：张风捷特烈<br/>
@@ -18,6 +19,7 @@ import com.toly1994.logic_canvas.core.shape.ShapeLine;
  */
 public class CanvasUtils {
 
+
     /**
      * 绘制网格
      *
@@ -26,24 +28,26 @@ public class CanvasUtils {
      * @param canvas 画布
      */
     public static void drawGrid(Context ctx, int step, Canvas canvas) {
+        Pos pos = Pos.init();
         Painter painter = new Painter(canvas);
         if (step == 0) {
             return;
         }
         //横线
         for (int i = 0; i < getScreenHeight(ctx) / step; i++) {
-            painter.draw(
-                    new ShapeLine()
-                            .ps(new Pos(0f, 0f - step * i), new Pos(getScreenWidth(ctx) + 0F, 0f - step * i))
-                            .ss(Color.GRAY).b(2f)
+            ;
+            painter.draw(new ShapeLine().ps(
+                    pos.form(0f, 0f - step * i),
+                    pos.form(getScreenWidth(ctx) + 0F, 0f - step * i)
+                    ).ss(Color.GRAY).b(2f)
             );
         }
         //竖线
         for (int i = 0; i <= getScreenWidth(ctx) / step; i++) {
-            painter.draw(
-                    new ShapeLine()
-                            .ps(new Pos(0f + step * i, 0f), new Pos(0f + step * i, 0f - getScreenHeight(ctx)))
-                            .ss(Color.GRAY).b(2f)
+            painter.draw(new ShapeLine().ps(
+                    pos.form(0f + step * i, 0f),
+                    pos.form(0f + step * i, 0f - getScreenHeight(ctx)))
+                    .ss(Color.GRAY).b(2f)
             );
         }
     }
@@ -55,62 +59,88 @@ public class CanvasUtils {
      * @param canvas 画布
      */
     public static void drawCoord(Context ctx, Pos coo, float step, Canvas canvas) {
-
+        Pos pos = Pos.init();
         Painter painter = new Painter(canvas);
-
         int cooColor = Color.BLACK;
         Float lineHeight = dp2px(ctx, 4f);
         int winH = getScreenHeight(ctx);
         int winW = getScreenWidth(ctx);
-
         //横线
         painter.draw(new ShapeLine()
-                .ps(new Pos(-coo.x, 0), new Pos(winW - coo.x, 0))
+                .ps(pos.form(-coo.x, 0), pos.form(winW - coo.x, 0))
                 .ss(cooColor).coo(coo));
         //竖线
         painter.draw(new ShapeLine()
-                .ps(new Pos(0, -(winH - coo.y)), new Pos(0, coo.y))
+                .ps(pos.form(0, -(winH - coo.y)), pos.form(0, coo.y))
                 .ss(cooColor).coo(coo));
-
         //右侧小线
         for (int i = 1; i < (winW - coo.x) / step; i++) {
+            Pos p0 = pos.form(step * i, 0);
             painter.draw(new ShapeLine()
-                    .ps(new Pos(step * i, 0), new Pos(step * i, lineHeight)).
+                    .ps(p0, pos.form(step * i, lineHeight)).
                             ss(cooColor).coo(coo));
+            painter.drawText(
+                    new ShapeText()
+                            .str("" + (int) (i * step)).al(">")
+                            .size(20).p(p0.add(coo).add(pos.form(10, 25)))
+                            .ss(cooColor)
+            );
         }
         //左侧小线
         for (int i = 1; i < coo.x / step; i++) {
+            Pos p0 = pos.form(-step * i, 0);
             painter.draw(new ShapeLine()
-                    .ps(new Pos(-step * i, 0), new Pos(-step * i, lineHeight)).
+                    .ps(p0, pos.form(-step * i, lineHeight)).
                             ss(cooColor).coo(coo));
+            painter.drawText(
+                    new ShapeText()
+                            .str("-" + (int) (i * step)).al(">")
+                            .size(20).p(p0.add(coo).add(pos.form(10f, 25f)))
+                            .ss(cooColor)
+            );
         }
         //上侧小线
         for (int i = 1; i < coo.y / step; i++) {
+            Pos p0 = pos.form(0, step * i);
             painter.draw(
                     new ShapeLine()
-                            .ps(new Pos(0, step * i), new Pos(lineHeight, step * i)).
+                            .ps(p0, pos.form(lineHeight, step * i)).
                             ss(cooColor).coo(coo));
+
+            painter.drawText(
+                    new ShapeText()
+                            .str((int) (i * step) + "").al(">")
+                            .size(20).p(p0.add(coo).add(pos.form(-10f, 5f)))
+                            .ss(cooColor)
+            );
         }
         //下侧小线
         for (int i = 1; i < (winH - coo.y) / step; i++) {
+            Pos p0 = pos.form(0, -step * i);
             painter.draw(new ShapeLine()
-                    .ps(new Pos(0, -step * i), new Pos(lineHeight, -step * i)).
+                    .ps(p0, pos.form(lineHeight, -step * i)).
                             ss(cooColor).coo(coo));
+
+            painter.drawText(
+                    new ShapeText()
+                            .str("-" + (int) (i * step)).al(">")
+                            .size(20).p(p0.add(coo).add(pos.form(-10, 5f)))
+                            .ss(cooColor)
+            );
         }
         //右小箭头
         painter.draw(new ShapeLine().ps(
-                new Pos(winW - coo.x - lineHeight * 2, lineHeight),
-                new Pos(winW - coo.x - lineHeight * 2, -lineHeight),
-                new Pos(winW - coo.x, 0),
-                new Pos(winW - coo.x - lineHeight * 2, lineHeight)
+                pos.form(winW - coo.x - lineHeight * 2, lineHeight),
+                pos.form(winW - coo.x - lineHeight * 2, -lineHeight),
+                pos.form(winW - coo.x, 0),
+                pos.form(winW - coo.x - lineHeight * 2, lineHeight)
         ).fs(cooColor).coo(coo));
-
-        //右小箭头
+        //上小箭头
         painter.draw(new ShapeLine().ps(
-                new Pos(lineHeight, coo.y - lineHeight * 2),
-                new Pos(-lineHeight, coo.y - lineHeight * 2),
-                new Pos(0, coo.y),
-                new Pos(lineHeight, coo.y - lineHeight * 2)
+                pos.form(lineHeight, coo.y - lineHeight * 2),
+                pos.form(-lineHeight, coo.y - lineHeight * 2),
+                pos.form(0, coo.y),
+                pos.form(lineHeight, coo.y - lineHeight * 2)
         ).fs(cooColor).coo(coo));
     }
 

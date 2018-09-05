@@ -3,7 +3,6 @@ package com.toly1994.logic_canvas.core.shape;
 import android.graphics.Path;
 
 import com.toly1994.logic_canvas.bean.Pos;
-import com.toly1994.logic_canvas.logic.Logic;
 
 /**
  * 作者：张风捷特烈<br/>
@@ -22,13 +21,10 @@ public class ShapeLine extends Shape {
     public Path formPath() {
         Pos[] poss = this.mps;
         Path path = new Path();
-        path.moveTo(poss[0].x, poss[0].y);
+        path.moveTo(poss[0].x, -poss[0].y);
         for (Pos pos : poss) {
-            if (Logic.isExist(this.mcoo)) {
-                path.lineTo(pos.x, -pos.y);
-            } else {
-                path.lineTo(pos.x, pos.y);
-            }
+            pos.refY();
+            path.lineTo(pos.x, pos.y);
         }
         return path;
     }

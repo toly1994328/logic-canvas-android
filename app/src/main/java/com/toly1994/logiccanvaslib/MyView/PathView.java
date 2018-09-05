@@ -68,10 +68,10 @@ public class PathView extends View {
         //大矩形：逆时针
         path.addRect(-200, -200, 400, 400, Path.Direction.CCW);
 
-//        path.setFillType(Path.FillType.EVEN_ODD);
-//        path.setFillType(Path.FillType.INVERSE_EVEN_ODD);
-//        path.setFillType(Path.FillType.WINDING);
-//        path.setFillType(Path.FillType.INVERSE_EVEN_ODD);
+//        mPath.setFillType(Path.FillType.EVEN_ODD);
+//        mPath.setFillType(Path.FillType.INVERSE_EVEN_ODD);
+//        mPath.setFillType(Path.FillType.WINDING);
+//        mPath.setFillType(Path.FillType.INVERSE_EVEN_ODD);
         // 添加大正方形
 
     }

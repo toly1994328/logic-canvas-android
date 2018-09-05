@@ -2,11 +2,16 @@ package com.toly1994.logiccanvaslib.MyView;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.toly1994.logic_canvas.bean.Pos;
 import com.toly1994.logic_canvas.core.Painter;
+import com.toly1994.logic_canvas.core.shape.Shape;
+import com.toly1994.logic_canvas.core.shape.ShapeLine;
 import com.toly1994.logic_canvas.simple.CanvasUtils;
 
 /**
@@ -34,24 +39,27 @@ public class LineView extends View {
         super.onDraw(canvas);
         final Painter painter = new Painter(canvas);
 
+        Paint paint = new Paint();
+        paint.setColor(Color.RED);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(10);
+
+
 //        painter.draw(
 //                new ShapeLine()
 //                        .ps(new Pos(0, 0), new Pos(200, -200))
 //                        .b(5f)
 //        );
 
-//        painter.draw(
-//                new ShapeLine()
-//                        .ps(
-//                                new Pos(0, 0),
-//                                new Pos(200, -200),
-//                                new Pos(200,-400),
-//                                new Pos(200,-400),
-//                                new Pos(800,-400),
-//                                new Pos(0,0)
-//                        ).b(5f)
-//        );
 
+        Shape shape = new ShapeLine()
+                .ps(
+                        new Pos(200, 100),
+                        new Pos(100, 200)
+                ).b(5f).coo(300f,300f);
+
+//        canvas.drawPath(shape.formPath(), paint);              // 绘制Path
+        painter.draw(shape);
 //
 //        Painter ang = new Painter()
 //                .b(5f)
@@ -65,7 +73,7 @@ public class LineView extends View {
 //        );
 
 
-        CanvasUtils.drawGrid(mContext,50,canvas);
-//        CanvasUtils.drawCoord(mContext, new Pos(600, 200), 10, 50, canvas);
+//        CanvasUtils.drawGrid(mContext, 50, canvas);
+        CanvasUtils.drawCoord(mContext, new Pos(300f,300f),50, canvas);
     }
 }
