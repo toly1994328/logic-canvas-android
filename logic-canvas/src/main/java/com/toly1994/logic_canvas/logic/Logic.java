@@ -1,7 +1,7 @@
 package com.toly1994.logic_canvas.logic;
 
 
-import com.toly1994.logic_canvas.bean.Pos;
+import com.toly1994.logic_canvas.base.Pos;
 
 /**
  * 作者：张风捷特烈

@@ -7,10 +7,11 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.toly1994.logic_canvas.bean.Pos;
+import com.toly1994.logic_canvas.base.Pos;
 import com.toly1994.logic_canvas.core.Painter;
+import com.toly1994.logic_canvas.core.PainterEnum;
 import com.toly1994.logic_canvas.core.shape.ShapeArc;
-import com.toly1994.logic_canvas.simple.CanvasUtils;
+import com.toly1994.logic_canvas.utils.CanvasUtils;
 
 /**
  * 作者：张风捷特烈<br/>
@@ -18,38 +19,38 @@ import com.toly1994.logic_canvas.simple.CanvasUtils;
  * 邮箱：1981462002@qq.com<br/>
  * 说明：
  */
-public class CicleView extends View {
+public class ArcView extends View {
 
 
     private Context mContext;
 
-    public CicleView(Context context) {
+    public ArcView(Context context) {
         super(context);
         mContext = context;
     }
 
-    public CicleView(Context context, @Nullable AttributeSet attrs) {
+    public ArcView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        final Painter painter = new Painter(canvas);
-
+        Painter painter = PainterEnum.INSTANCE.getInstance(canvas);
         painter.draw(
                 new ShapeArc(1)
                         .r(100f)
-                        .b(5f).ss(Color.RED)
-                        .p(new Pos(200,-200))
+                        .b(80f).ss(Color.RED)
+                        .coo(400f,400f)
+
         );
 
-//        painter.draw(
-//                new ShapeArc()
-//                        .r(100f).ang(135f)
-//                        .b(4f).ss(Color.RED)
-//                        .coo(new Pos(400, 400))
-//        );
+        painter.draw(
+                new ShapeArc()
+                        .r(100f).ang(360f)
+                        .b(4f).ss(Color.BLUE)
+                        .coo(new Pos(400, 400))
+        );
 
 
         CanvasUtils.drawGrid(mContext, 50, canvas);

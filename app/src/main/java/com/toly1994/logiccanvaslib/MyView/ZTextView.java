@@ -6,10 +6,11 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.toly1994.logic_canvas.bean.Pos;
+import com.toly1994.logic_canvas.base.Pos;
 import com.toly1994.logic_canvas.core.Painter;
+import com.toly1994.logic_canvas.core.PainterEnum;
 import com.toly1994.logic_canvas.core.shape.ShapeText;
-import com.toly1994.logic_canvas.simple.CanvasUtils;
+import com.toly1994.logic_canvas.utils.CanvasUtils;
 
 /**
  * 作者：张风捷特烈<br/>
@@ -20,8 +21,8 @@ import com.toly1994.logic_canvas.simple.CanvasUtils;
 public class ZTextView extends View {
 
 
-    private Context mContext;   
-    private Pos pos = Pos.init();
+    private Context mContext;
+    Pos pos = new Pos(0,0);
 
     public ZTextView(Context context) {
         super(context);
@@ -35,7 +36,7 @@ public class ZTextView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        final Painter painter = new Painter(canvas);
+        Painter painter = PainterEnum.INSTANCE.getInstance(canvas);
 
 //        for (int i = -4; i < 14; i += 2) {
 //            float num = (float) (Math.random() * 500);
@@ -45,8 +46,8 @@ public class ZTextView extends View {
 //
 //            painter.drawText(
 //                    new ShapeText().str((int)num + "").size(28)
-//                            .p(pos.form(22+50f * i, -num-10)
-//                                    .add(pos.form(400f, 800f)))
+//                            .p(pos.formAll(22+50f * i, -num-10)
+//                                    .add(pos.formAll(400f, 800f)))
 //            );
 //            painter.draw(line);
 //        }
@@ -60,6 +61,6 @@ public class ZTextView extends View {
 
 
 //        CanvasUtils.drawGrid(mContext, 50, canvas);
-        CanvasUtils.drawCoord(mContext, pos.form(400, 400), 50, canvas);
+        CanvasUtils.drawCoord(mContext, pos.clone(400, 400), 50, canvas);
     }
 }

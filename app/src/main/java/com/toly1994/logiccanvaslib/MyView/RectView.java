@@ -7,10 +7,11 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.toly1994.logic_canvas.bean.Pos;
+import com.toly1994.logic_canvas.base.Pos;
 import com.toly1994.logic_canvas.core.Painter;
+import com.toly1994.logic_canvas.core.PainterEnum;
 import com.toly1994.logic_canvas.core.shape.ShapeRect;
-import com.toly1994.logic_canvas.simple.CanvasUtils;
+import com.toly1994.logic_canvas.utils.CanvasUtils;
 
 /**
  * 作者：张风捷特烈<br/>
@@ -35,7 +36,7 @@ public class RectView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        final Painter painter = new Painter(canvas);
+        Painter painter = PainterEnum.INSTANCE.getInstance(canvas);
 
         painter.draw(
                 new ShapeRect()

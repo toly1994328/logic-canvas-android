@@ -5,8 +5,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 
-import com.toly1994.logic_canvas.bean.Pos;
+import com.toly1994.logic_canvas.base.Pos;
 import com.toly1994.logic_canvas.core.shape.Shape;
+import com.toly1994.logic_canvas.core.shape.ShapeLine;
 import com.toly1994.logic_canvas.core.shape.ShapeText;
 import com.toly1994.logic_canvas.logic.Logic;
 
@@ -17,19 +18,21 @@ import com.toly1994.logic_canvas.logic.Logic;
  * 邮箱：1981462002@qq.com
  * 说明：
  */
+
+
 public class Painter {
     private static final String TAG = "Painter";
     private Canvas mCanvas;
 
 
-    public Painter(Canvas canvas) {
+    public void attach(Canvas canvas) {
         mCanvas = canvas;
     }
 
     /**
      * 绘制入口
      */
-    public void draw(final Shape shape) {
+    public Painter draw(final Shape shape) {
 
         mCanvas.save();
         float x = shape.mp.x;
@@ -39,21 +42,24 @@ public class Painter {
         if (Logic.isExist(coo)) {
             x = coo.x + x;
             y = coo.y - shape.mp.y;
-            shape.mp.x = x;
-            shape.mp.y = y;
+//            shape.mp.x = x;
+//            shape.mp.y = y;
         }
-        mCanvas.translate(x + shape.mb, y + shape.mb);
-        mCanvas.translate((shape.ma.x).floatValue(), (shape.ma.y).floatValue());
-        mCanvas.rotate(shape.mrot.floatValue());
-        mCanvas.scale(shape.msx, shape.msy);
-        mCanvas.translate(-(shape.ma.x).floatValue(), -(shape.ma.y).floatValue());
 
+        mCanvas.translate(x, y);
+        mCanvas.translate(shape.ma.x, shape.ma.y);
+        mCanvas.rotate(shape.mrot);
+        mCanvas.scale(shape.msx, shape.msy);
+        mCanvas.translate(-shape.ma.x, -shape.ma.y);
 
         this.setOnPrepared(new OnPrepared() {
             @Override
             public void draw(Paint paint) {
                 Path path = shape.formPath();
                 if (path != null) {
+                    if (shape.de != null) {
+                        paint.setPathEffect(shape.de);
+                    }
                     mCanvas.drawPath(path, paint);
                 }
             }
@@ -64,6 +70,19 @@ public class Painter {
         }
 
         mCanvas.restore();
+
+        return this;
+    }
+
+    /**
+     * 绘制多个shape
+     *
+     * @param shapes
+     */
+    public void draw(Shape... shapes) {
+        for (Shape shape : shapes) {
+            draw(shape);
+        }
     }
 
     /**
@@ -75,8 +94,9 @@ public class Painter {
         Paint paint = new Paint();
         paint.setAntiAlias(true);//抗锯齿
 
-        boolean isStroke = Logic.isExist(shape.mss);
-        boolean isFill = Logic.isExist(shape.mfs);
+        //很巧妙的解决了一个小问题。toly----2018年9月6日08:37:37
+        boolean isStroke = shape.mss != 0xf69ABCF5;//说明设置了线条颜色
+        boolean isFill = shape.mfs != 0xf69ABCF5;//说明设置了填充颜色
 
         if (isStroke && !isFill) {
             paint.setColor(shape.mss);
@@ -93,7 +113,7 @@ public class Painter {
             paint.setStyle(Paint.Style.STROKE);
         }
 
-        paint.setStrokeWidth((shape.mb).intValue());
+        paint.setStrokeWidth(shape.mb);
 
         return paint;
     }
@@ -145,6 +165,34 @@ public class Painter {
         }
 
         mCanvas.drawText(tShape.mStr, shape.mp.x, shape.mp.y, paint);
+    }
+
+//    TODO 这个方法挺好玩的 先注释着  toly----2018年9月5日16:11:54
+//    public void cap(Shape shape) {
+//        shape.formPath();
+//        ShapeLine shapeL = (ShapeLine) (shape);
+//
+//
+//        float deta = shapeL.mang > 90 ? 20f : -20;
+//
+//        Shape cap = new ShapeLine()
+//                .c(150f).ang(-90f)
+//                .p(shapeL.mv.refY()).coo(shapeL.mcoo).b(8f);
+//        draw(cap);
+//    }
+
+    /**
+     * 给向量加个箭头...纯属好看
+     *
+     * @param shapeL 直线
+     */
+    public void cap(ShapeLine shapeL) {
+        Pos posOfCap = shapeL.mv.add(shapeL.mp);//箭头向量的起点
+        ShapeLine cap = (ShapeLine) new ShapeLine()//一侧箭头
+                .c(30f).ang(shapeL.mang + 155)
+                .p(posOfCap).coo(shapeL.mcoo).b(3f).ss(Color.BLUE);
+        ShapeLine cap2 = cap.deepClone().ang(shapeL.mang - 155);//另一侧箭头
+        draw(cap, cap2);//绘制箭头
     }
 
     //////////////////////////////////画板准备完成监听

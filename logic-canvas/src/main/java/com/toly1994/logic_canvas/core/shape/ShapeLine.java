@@ -2,7 +2,11 @@ package com.toly1994.logic_canvas.core.shape;
 
 import android.graphics.Path;
 
-import com.toly1994.logic_canvas.bean.Pos;
+import com.toly1994.logic_canvas.base.Pos;
+import com.toly1994.logic_canvas.logic.Logic;
+
+import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * 作者：张风捷特烈<br/>
@@ -10,7 +14,9 @@ import com.toly1994.logic_canvas.bean.Pos;
  * 邮箱：1981462002@qq.com<br/>
  * 说明：线
  */
-public class ShapeLine extends Shape {
+public class ShapeLine extends Shape implements Serializable, Cloneable {
+
+
     /**
      * 依靠点集绘制
      */
@@ -19,35 +25,137 @@ public class ShapeLine extends Shape {
 
     @Override
     public Path formPath() {
-        Pos[] poss = this.mps;
         Path path = new Path();
-        path.moveTo(poss[0].x, -poss[0].y);
-        for (Pos pos : poss) {
-            pos.refY();
-            path.lineTo(pos.x, pos.y);
+
+        //绘制向量
+        if (Logic.isExist(mc, mang) || Logic.isExist(mv)) {
+            parse();
+            path.moveTo(0, 0);
+            path.lineTo(mv.x, -mv.y);
+//            ang(-mang);
+        } else {
+            Pos[] poss = this.mps;
+            path.moveTo(poss[0].x, -poss[0].y);
+            for (Pos pos : poss) {
+                path.lineTo(pos.x, -pos.y);
+            }
         }
         return path;
     }
 
+//    /**
+//     * 序列化深拷贝：慎用
+//     *
+//     * @return
+//     */
+//    public ShapeLine formAll() {//将对象写到流里
+//        ObjectInputStream oi = null;
+//        try {
+//            ByteArrayOutputStream bo = new ByteArrayOutputStream();
+//            ObjectOutputStream oo = new ObjectOutputStream(bo);
+//            oo.writeObject(this);//从流里读出来
+//            ByteArrayInputStream bi = new ByteArrayInputStream(bo.toByteArray());
+//            oi = new ObjectInputStream(bi);
+//            return (ShapeLine) oi.readObject();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+
+
+    /**
+     * 浅克隆
+     *
+     * @return 浅克隆对象
+     */
+    public ShapeLine clone() {
+        ShapeLine clone = null;
+        try {
+            clone = (ShapeLine) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return clone;
+    }
+
+    /**
+     * 深克隆对象
+     *
+     * @return 深克隆对象
+     */
+    public ShapeLine deepClone() {
+        ShapeLine clone = null;
+        try {
+            clone = (ShapeLine) super.clone();
+            if (mv != null) {
+                clone.mv = mv.clone();
+            }
+            clone.mp = mp.clone();
+            clone.ma = ma.clone();
+            clone.mcoo = mcoo.clone();
+            if (mps != null) {
+                for (int i = 0; i < mps.length; i++) {
+                    clone.mps[i] = mps[i].clone();
+                }
+            }
+
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return clone;
+    }
+
+    /**
+     * 直线向量解析
+     */
+    public ShapeLine parse() {
+        if (!Logic.isExist(mv)) {
+            double x = Math.cos(Logic.rad(mang));
+            double y = Math.sin(Logic.rad(mang));
+            mv = mp.clone((float) x, (float) y).dotC(mc);
+        } else {
+            mang = mv.deg();
+            mc = mv.length();
+        }
+        return this;
+    }
+
 
     // TODO 直线解析
-    public Pos mp0 = new Pos(0, 0);
-    public Float mc = 0f;//周长
-    public Float mang = 0f;//线与X轴夹角(角度数)
+    /**
+     * 向量
+     */
+    public Pos mv;
+    /**
+     * 向量长度
+     */
+    public Float mc;
+    /**
+     * 向量夹角(角度数)
+     */
+    public Float mang;
+
+
     public Float mk;//斜率
     public Float mb0 = 0f;//直线解析式x=0时，b的值
     public Float mx = 0f;//直线解析式y时，x的值
     public Float my = 0f;//直线解析式x时，y的值
 
 
-    public ShapeLine p0(Pos p0) {
-        this.mp0 = p0;
+    public ShapeLine v(Pos v) {
+        this.mv = v;
         return this;
     }
 
-    public ShapeLine p0(Float x, Float y) {
-        this.mp0 = new Pos(x, y);
+    public ShapeLine v(float x, float y) {
+        this.mv = mp.clone(x, y);
         return this;
+    }
+
+    public Pos add(ShapeLine shapeLine) {
+        return mv.clone(mv).add(shapeLine.mv);
+
     }
 
     public ShapeLine c(Float c) {
@@ -85,5 +193,28 @@ public class ShapeLine extends Shape {
         return this;
     }
 
-
+    @Override
+    public String toString() {
+        return "ShapeLine{" +
+                "mps=" + Arrays.toString(mps) +
+                ", mv=" + mv +
+                ", mc=" + mc +
+                ", mang=" + mang +
+                ", mk=" + mk +
+                ", mb0=" + mb0 +
+                ", mx=" + mx +
+                ", my=" + my +
+                ", mb=" + mb +
+                ", mp=" + mp +
+                ", ma=" + ma +
+                ", mcoo=" + mcoo +
+                ", mrot=" + mrot +
+                ", msx=" + msx +
+                ", msy=" + msy +
+                ", mfs=" + mfs +
+                ", mss=" + mss +
+                ", de=" + de +
+                ", mdir=" + mdir +
+                '}';
+    }
 }

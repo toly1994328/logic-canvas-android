@@ -9,12 +9,13 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.toly1994.logic_canvas.bean.Pos;
+import com.toly1994.logic_canvas.base.Pos;
 import com.toly1994.logic_canvas.core.Painter;
+import com.toly1994.logic_canvas.core.PainterEnum;
 import com.toly1994.logic_canvas.core.shape.Shape;
-import com.toly1994.logic_canvas.core.shape.ShapeEmpty;
+import com.toly1994.logic_canvas.core.shape.ShapeCommon;
 import com.toly1994.logic_canvas.core.shape.ShapeStar;
-import com.toly1994.logic_canvas.simple.CanvasUtils;
+import com.toly1994.logic_canvas.utils.CanvasUtils;
 
 /**
  * 作者：张风捷特烈<br/>
@@ -40,8 +41,7 @@ public class PathView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        Painter painter = new Painter(canvas);
-
+        Painter painter = PainterEnum.INSTANCE.getInstance(canvas);
         Path path = new Path();// 创建Path
         Path src = new Path();
 
@@ -53,7 +53,7 @@ public class PathView extends View {
 
         path.addPath(src,0,200);
 
-        Shape shapeEmpty = new ShapeEmpty(path)
+        Shape shapeEmpty = new ShapeCommon(path)
                 .coo(300f, 400f).b(0f).fs(Color.RED);
 
         painter.draw(shapeEmpty);

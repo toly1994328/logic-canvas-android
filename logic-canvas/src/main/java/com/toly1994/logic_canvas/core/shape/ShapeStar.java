@@ -3,31 +3,33 @@ package com.toly1994.logic_canvas.core.shape;
 import android.graphics.Path;
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
+
 /**
  * 作者：张风捷特烈<br/>
  * 时间：2018/9/4 0004:9:31<br/>
  * 邮箱：1981462002@qq.com<br/>
  * 说明：星型
  */
-public class ShapeStar extends Shape {
+public class ShapeStar extends Shape implements Serializable, Cloneable {
     /**
      * 五角星f
      **/
-    public Integer mnum = 5;//角数
-    public Float mR = 100f;//外接圆半径
-    public Float mr = 0f;//内接圆半径
+    public int mnum = 5;//角数
+    public float mR = 100f;//外接圆半径
+    public float mr = 0f;//内接圆半径
 
-    public ShapeStar num(Integer num) {
+    public ShapeStar num(int num) {
         this.mnum = num;
         return this;
     }
 
-    public ShapeStar R(Float r) {
+    public ShapeStar R(float r) {
         mR = r;
         return this;
     }
 
-    public ShapeStar r(Float r) {
+    public ShapeStar r(float r) {
         mr = r;
         return this;
     }
@@ -45,6 +47,39 @@ public class ShapeStar extends Shape {
      */
     public static final int MODE_POLYGON = 2;
     private int mMode;
+
+    /**
+     * 浅克隆
+     *
+     * @return 浅克隆对象
+     */
+    public ShapeStar clone() {
+        ShapeStar clone = null;
+        try {
+            clone = (ShapeStar) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return clone;
+    }
+
+    /**
+     * 深克隆对象
+     *
+     * @return 深克隆对象
+     */
+    public ShapeRect deepClone() {
+        ShapeRect clone = null;
+        try {
+            clone = (ShapeRect) super.clone();
+            clone.mp = mp.clone();
+            clone.ma = ma.clone();
+            clone.mcoo = mcoo.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return clone;
+    }
 
 
     public ShapeStar() {

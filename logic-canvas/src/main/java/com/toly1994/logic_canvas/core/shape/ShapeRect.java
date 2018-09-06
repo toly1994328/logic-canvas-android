@@ -3,7 +3,7 @@ package com.toly1994.logic_canvas.core.shape;
 import android.graphics.Path;
 import android.graphics.RectF;
 
-import com.toly1994.logic_canvas.bean.Pos;
+import java.io.Serializable;
 
 /**
  * 作者：张风捷特烈<br/>
@@ -11,20 +11,20 @@ import com.toly1994.logic_canvas.bean.Pos;
  * 邮箱：1981462002@qq.com<br/>
  * 说明：矩形
  */
-public class ShapeRect extends Shape {
+public class ShapeRect extends Shape implements Serializable, Cloneable {
     /**
      * 长
      */
-    public Float mx = 0f;
+    public float mx = 0f;
     /**
      * 宽
      */
-    public Float my = 0f;
+    public float my = 0f;
 
     /**
      * 半径
      */
-    public Float mr = 0f;//线与X轴夹角(角度数)
+    public float mr = 0f;//线与X轴夹角(角度数)
 
 
     @Override
@@ -33,52 +33,62 @@ public class ShapeRect extends Shape {
         float width = this.mx - this.mb;
         float height = this.my - this.mb;
 
-
         float r = this.mr;
 
-//        path.addRect(0, 0, width, height, CW);
-        RectF rectF = new RectF(0, 0, width, height);
+        RectF rectF = new RectF(0, -height, width,0);
         path.addRoundRect(rectF, r, r, Path.Direction.CW);
-
-//        if (2 * r > width || 2 * r > height) {
-//            return null;
-//        }
-//
-//        path.addArc(new RectF(0, 0, 2 * r, 2 * r), 180, 90);
-//        path.lineTo(width - r, 0);
-//        path.addArc(new RectF(width - 2 * r, 0, width, 2 * r), -90, 90);
-//        path.lineTo(width, height - r);
-//        path.addArc(new RectF(width - 2 * r, height - 2 * r, width, height), 0, 90);
-//        path.lineTo(r, height);
-//        path.addArc(new RectF(0, height - 2 * r, 2 * r, height), 90, 90);
-//        path.lineTo(0, r);
 
         return path;
     }
 
-    @Override
-    public Shape p(Pos p) {
-        mp.add(new Pos(0, this.my - this.mb));
-        return super.p(p);
+    /**
+     * 浅克隆
+     *
+     * @return 浅克隆对象
+     */
+    public ShapeRect clone() {
+        ShapeRect clone = null;
+        try {
+            clone = (ShapeRect) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return clone;
     }
 
-    @Override
-    public Shape p(Float x, Float y) {
-        return super.p(x, y + this.my - this.mb);
+    /**
+     * 深克隆对象
+     *
+     * @return 深克隆对象
+     */
+    public ShapeRect deepClone() {
+        ShapeRect clone = null;
+        try {
+            clone = (ShapeRect) super.clone();
+            clone.mp = mp.clone();
+            clone.ma = ma.clone();
+            clone.mcoo = mcoo.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return clone;
     }
 
-    public ShapeRect x(Float mx) {
+
+    public ShapeRect x(float mx) {
         this.mx = mx;
         return this;
     }
 
-    public ShapeRect y(Float my) {
+    public ShapeRect y(float my) {
         this.my = my;
         return this;
     }
 
-    public ShapeRect r(Float mr) {
+    public ShapeRect r(float mr) {
         this.mr = mr;
         return this;
     }
+
+
 }

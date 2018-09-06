@@ -1,4 +1,4 @@
-package com.toly1994.logic_canvas.simple;
+package com.toly1994.logic_canvas.utils;
 
 import android.content.res.ColorStateList;
 import android.graphics.Color;

@@ -1,4 +1,6 @@
-package com.toly1994.logic_canvas.bean;
+package com.toly1994.logic_canvas.base;
+
+import java.io.Serializable;
 
 /**
  * 作者：张风捷特烈
@@ -6,17 +8,16 @@ package com.toly1994.logic_canvas.bean;
  * 邮箱：1981462002@qq.com
  * 说明：
  */
-public class Pos implements Cloneable {
-
+public class Pos implements Cloneable, Serializable {
 
     /**
      * x维度
      */
-    public Float x;
+    public float x;
     /**
      * y维度
      */
-    public Float y;
+    public float y;
 
     /**
      * @param x x维度
@@ -27,11 +28,7 @@ public class Pos implements Cloneable {
         this.y = y;
     }
 
-    public static Pos init() {
-        return new Pos(0, 0);
-    }
-
-    public Pos form(float x, float y) {
+    public Pos clone(float x, float y) {
         Pos clone = null;
         try {
             clone = (Pos) super.clone();
@@ -41,6 +38,21 @@ public class Pos implements Cloneable {
             e.printStackTrace();
         }
         return clone;
+    }
+
+    public Pos clone() {
+        Pos clone = null;
+        try {
+            clone = (Pos) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return clone;
+    }
+
+
+    public Pos clone(Pos p) {
+        return clone(p.x, p.y);
     }
 
     /**
@@ -60,9 +72,11 @@ public class Pos implements Cloneable {
      * @return 当前向量与目标向量的和向量
      */
     public Pos add(Pos target) {
-        this.x += target.x;
-        this.y += target.y;
-        return this;
+        return clone(this.x + target.x, this.y + target.y);
+    }
+
+    public Pos add(float x, float y) {
+        return add(clone(x, y));
     }
 
     /**
@@ -82,9 +96,7 @@ public class Pos implements Cloneable {
      * @return 向量取反
      */
     public Pos ref() {
-        this.x = -this.x;
-        this.y = -this.y;
-        return this;
+        return clone(-this.x, -this.y);
     }
 
     /**
@@ -93,8 +105,7 @@ public class Pos implements Cloneable {
      * @return
      */
     public Pos refY() {
-        this.y = -this.y;
-        return this;
+        return clone(this.x, -this.y);
     }
 
     /**
@@ -103,8 +114,7 @@ public class Pos implements Cloneable {
      * @return 仅x方向取反
      */
     public Pos refX() {
-        this.x = -this.x;
-        return this;
+        return clone(-this.x, this.y);
     }
 
     /**
@@ -116,6 +126,53 @@ public class Pos implements Cloneable {
         return this;
     }
 
+
+    /**
+     * 向量弧度
+     *
+     * @return 向量弧度
+     */
+    public float rad() {
+        return (float) Math.atan2(y, x);
+    }
+
+
+    /**
+     * 向量角度
+     *
+     * @return 向量角度
+     */
+    public float deg() {
+        return (float) (rad() / Math.PI * 180);
+    }
+
+    /**
+     * 两向量间夹角:调用方指向目标方
+     *
+     * @return 向量角度
+     */
+    public float deg2(Pos target) {
+        return deg() - target.deg();
+    }
+
+    /**
+     * 两向量间夹角:调用方指向目标方
+     *
+     * @return 向量弧度
+     */
+    public float rad2(Pos target) {
+        return (float) (deg2(target) / Math.PI * 180);
+    }
+
+    /**
+     * 是否是零向量
+     *
+     * @return
+     */
+    public boolean isZero() {
+        return x == 0 && y == 0;
+    }
+
     /**
      * 向量点乘常量
      *
@@ -123,20 +180,28 @@ public class Pos implements Cloneable {
      * @return 向量模等于相应倍数的同向向量
      */
     public Pos dotC(float num) {
-        this.x *= num;
-        this.y *= num;
-        return this;
+        return clone(this.x*num, -this.y*num);
+    }
 
+    /**
+     * 向量的长度设置为我们期待的value
+     *
+     * @param len
+     */
+    public Pos resize(float len) {
+        return normalize().dotC(len);
     }
 
     /**
      * 单位化向量
+     *
      * @return 单位化向量
      */
-    public Pos  normalize() {
+    public Pos normalize() {
 
         return this.dotC(1 / this.length());
     }
+
 
     @Override
     public String toString() {
