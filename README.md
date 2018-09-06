@@ -57,7 +57,7 @@ pos.clone(x, y)
 
 ##### 在自定义View的onDraw方法中：绘制外接圆半径100,内接圆半径50的5角星
 ```
-Painter painter = new Painter(canvas);
+Painter painter = PainterEnum.INSTANCE.getInstance(canvas);
 painter.draw(
     new ShapeStar()
             .num(5)//角的个数,数字任意
