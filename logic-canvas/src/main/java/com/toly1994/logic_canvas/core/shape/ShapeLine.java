@@ -32,7 +32,7 @@ public class ShapeLine extends Shape implements Serializable, Cloneable {
             parse();
             path.moveTo(0, 0);
             path.lineTo(mv.x, -mv.y);
-//            ang(-mang);
+
         } else {
             Pos[] poss = this.mps;
             path.moveTo(poss[0].x, -poss[0].y);
@@ -118,6 +118,7 @@ public class ShapeLine extends Shape implements Serializable, Cloneable {
             mang = mv.deg();
             mc = mv.length();
         }
+
         return this;
     }
 
@@ -164,7 +165,7 @@ public class ShapeLine extends Shape implements Serializable, Cloneable {
     }
 
     public ShapeLine ang(Float ang) {
-        this.mang = ang;
+        this.mang = -ang;
         return this;
     }
 

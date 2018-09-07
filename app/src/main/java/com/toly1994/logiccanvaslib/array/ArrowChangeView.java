@@ -2,15 +2,18 @@ package com.toly1994.logiccanvaslib.array;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 
 import com.toly1994.logic_canvas.base.BaseView;
+import com.toly1994.logic_canvas.base.Cons;
 import com.toly1994.logic_canvas.base.Pos;
 import com.toly1994.logic_canvas.core.Painter;
 import com.toly1994.logic_canvas.core.PainterEnum;
+import com.toly1994.logic_canvas.core.shape.ShapeLine;
 import com.toly1994.logic_canvas.go.NumGo;
 import com.toly1994.logic_canvas.utils.CanvasUtils;
 
@@ -78,19 +81,19 @@ public class ArrowChangeView extends BaseView {
 //        pA = pA.refY();//X取反向量
 //        pA.release();//置为0向量
 
-//        Pos pA = v2(100f, 100f);
-//        Pos pB = v2(400f, 50f);
-//        ShapeLine a = (ShapeLine) sl.deepClone().v(pA).coo(coo).b(5f).ss(Color.RED);
-//        ShapeLine b = a.deepClone().v(pB).parse();
-//        ShapeLine c = a.deepClone().v(pA.add(pB));
+        Pos pA = v2(100f, 100f);
+        Pos pB = v2(400f, 50f);
+        ShapeLine a = (ShapeLine) sl.deepClone().v(pA).coo(coo).b(5f).ss(Color.RED);
+        ShapeLine b = a.deepClone().v(pB).parse();
+        ShapeLine c = a.deepClone().v(pA.add(pB));
 //
-//        painter.draw(a).cap(a);
-//        painter.draw(b).cap(b);
-//        painter.draw(c).cap(c);
-//
-//        ShapeLine AC = (ShapeLine) sl.deepClone().ps(pA, pA.add(pB)).coo(coo).b(4).de(Cons.DOT_LINE_8).ss(Color.BLACK);
-//        ShapeLine BC = AC.deepClone().ps(pB, pA.add(pB));
-//        painter.draw(AC, BC);
+        painter.draw(a).cap(a);
+        painter.draw(b).cap(b);
+        painter.draw(c).cap(c);
+
+        ShapeLine AC = (ShapeLine) sl.deepClone().ps(pA, pA.add(pB)).coo(coo).b(4).de(Cons.DOT_LINE_8).ss(Color.BLACK);
+        ShapeLine BC = AC.deepClone().ps(pB, pA.add(pB));
+        painter.draw(AC, BC);
 //
 //        painter.drawText(new ShapeText().str("A").size(40).ss(Color.BLACK).p(pA.refY().add(coo).add(5f, -5f)));
 //        painter.drawText(new ShapeText().str("B").size(40).ss(Color.BLACK).p(pB.refY().add(coo).add(-5f, -5f)));

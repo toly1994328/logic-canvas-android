@@ -17,12 +17,14 @@ Pos点类思想层面由点，升级到向量，实现了向量的基本用法
 对坐标系统进行一定的优化  
 Pos的向量形式使用有点庞大，新写一篇文章讲述，详见：[Android绘图之和我一起画箭头](https://www.jianshu.com/p/d524cede6768)
 
-##### 2018年9月6号更新：由V0.01升级到V0.03  
+##### 2018年9月6号更新：由V0.02升级到V0.03
 Painter采用单例模式  
 优化原型模式，各Shape采用深拷贝来解决构造较长、繁琐的情况  
 比较new 对象和拷贝的效率问题，拷贝一点。具体见文：[来谈谈Java的深浅拷贝吧](https://www.jianshu.com/p/8096ffce07fd)  
 完善向量部分，进行测试
 
+##### 2018年9月7号更新：由V0.03升级到V0.04
+优化代码
 
 ---
 
@@ -36,7 +38,7 @@ allprojects {
 	}
 }
 
-implementation 'com.github.toly1994328:logic-canvas-android:0.03'
+implementation 'com.github.toly1994328:logic-canvas-android:0.04'
 ```
 ##### 点类Pos的使用：
 

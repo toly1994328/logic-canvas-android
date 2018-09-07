@@ -29,7 +29,7 @@ public abstract class Shape {
     public float mrot = 0f;//旋转量
     public float msx = 1f;//X缩放量
     public float msy = 1f;//Y缩放量
-    public int mss = 0xe7FEF382;//线条颜色
+    public int mss = 0xe792A09D;//线条颜色
     public int mfs = 0xf69ABCF5;//填充颜色
 
     public DashPathEffect de;

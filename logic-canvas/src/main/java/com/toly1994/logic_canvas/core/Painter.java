@@ -95,7 +95,7 @@ public class Painter {
         paint.setAntiAlias(true);//抗锯齿
 
         //很巧妙的解决了一个小问题。toly----2018年9月6日08:37:37
-        boolean isStroke = shape.mss != 0xf69ABCF5;//说明设置了线条颜色
+        boolean isStroke = shape.mss != 0xe792A09D;//说明设置了线条颜色
         boolean isFill = shape.mfs != 0xf69ABCF5;//说明设置了填充颜色
 
         if (isStroke && !isFill) {
@@ -187,12 +187,14 @@ public class Painter {
      * @param shapeL 直线
      */
     public void cap(ShapeLine shapeL) {
+
         Pos posOfCap = shapeL.mv.add(shapeL.mp);//箭头向量的起点
+        System.out.println(shapeL.mang);
         ShapeLine cap = (ShapeLine) new ShapeLine()//一侧箭头
-                .c(30f).ang(shapeL.mang + 155)
+                .c(30f).ang(-shapeL.mang + 150)
                 .p(posOfCap).coo(shapeL.mcoo).b(3f).ss(Color.BLUE);
-        ShapeLine cap2 = cap.deepClone().ang(shapeL.mang - 155);//另一侧箭头
-        draw(cap, cap2);//绘制箭头
+        ShapeLine cap2 = cap.deepClone().ang(-shapeL.mang-150f);//另一侧箭头
+        draw(cap,cap2);//绘制箭头
     }
 
     //////////////////////////////////画板准备完成监听
