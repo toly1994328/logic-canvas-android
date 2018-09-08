@@ -25,14 +25,13 @@ public class CanvasUtils {
 
     /**
      * 绘制网格
-
      *
      * @param ctx    上下文
      * @param step   间隔
      * @param canvas 画布
      */
     public static void drawGrid(Context ctx, int step, Canvas canvas) {
-        Pos pos = new Pos(0,0);
+        Pos pos = new Pos(0, 0);
         Painter painter = PainterEnum.INSTANCE.getInstance(canvas);
         if (step == 0) {
             return;
@@ -63,7 +62,7 @@ public class CanvasUtils {
      * @param canvas 画布
      */
     public static void drawCoord(Context ctx, Pos coo, float step, Canvas canvas) {
-        Pos pos = new Pos(0,0);
+        Pos pos = new Pos(0, 0);
         Painter painter = PainterEnum.INSTANCE.getInstance(canvas);
         int cooColor = Color.BLACK;
         Float lineHeight = dp2px(ctx, 4f);
@@ -104,7 +103,7 @@ public class CanvasUtils {
             );
         }
         //上侧小线
-        for (int i = 1; i <(winH - coo.y) / step; i++) {
+        for (int i = 1; i < (winH - coo.y) / step; i++) {
             Pos p0 = pos.clone(0, step * i);
             painter.draw(
                     new ShapeLine()
@@ -119,7 +118,7 @@ public class CanvasUtils {
             );
         }
         //下侧小线
-        for (int i = 1; i < coo.y  / step; i++) {
+        for (int i = 1; i < coo.y / step; i++) {
             Pos p0 = pos.clone(0, -step * i);
             painter.draw(new ShapeLine()
                     .ps(p0, pos.clone(lineHeight, -step * i)).

@@ -123,7 +123,7 @@ public class ShapeLine extends Shape implements Serializable, Cloneable {
     }
 
 
-    // TODO 直线解析
+
     /**
      * 向量
      */
@@ -137,7 +137,7 @@ public class ShapeLine extends Shape implements Serializable, Cloneable {
      */
     public Float mang;
 
-
+    // TODO 直线解析
     public Float mk;//斜率
     public Float mb0 = 0f;//直线解析式x=0时，b的值
     public Float mx = 0f;//直线解析式y时，x的值

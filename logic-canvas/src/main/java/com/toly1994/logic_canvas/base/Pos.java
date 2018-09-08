@@ -40,6 +40,7 @@ public class Pos implements Cloneable, Serializable {
         return clone;
     }
 
+
     public Pos clone() {
         Pos clone = null;
         try {
@@ -155,6 +156,34 @@ public class Pos implements Cloneable, Serializable {
         return deg() - target.deg();
     }
 
+
+    //计算2个向量的夹角弧度
+    //参考点积公式:v1 * v2 = cos<v1,v2> * |v1| *|v2|
+    public static double degWith(Pos v1, Pos v2) {
+
+        return (float) (radWith(v1, v2) / Math.PI * 180);
+    }
+
+    //计算2个向量的夹角弧度
+    //参考点积公式:v1 * v2 = cos<v1,v2> * |v1| *|v2|
+    public static double radWith(Pos v1, Pos v2) {
+        if (!v1.isNormalized()) v1 = v1.clone().normalize(); // |v1| = 1
+        if (!v2.isNormalized()) v2 = v2.clone().normalize(); // |v2| = 1
+        return Math.acos(v1.dotProduct(v2));
+    }
+
+    //2个向量的数量积(点积)
+    public double dotProduct(Pos v) {
+        return x * v.x + y * v.y;
+    }
+
+
+    //是否已经标准化
+    public boolean isNormalized() {
+        return length() == 1.0;
+    }
+
+
     /**
      * 两向量间夹角:调用方指向目标方
      *
@@ -180,7 +209,7 @@ public class Pos implements Cloneable, Serializable {
      * @return 向量模等于相应倍数的同向向量
      */
     public Pos dotC(float num) {
-        return clone(this.x*num, -this.y*num);
+        return clone(this.x * num, -this.y * num);
     }
 
     /**

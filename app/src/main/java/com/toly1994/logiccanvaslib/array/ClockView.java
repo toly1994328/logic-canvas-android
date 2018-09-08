@@ -37,7 +37,8 @@ public class ClockView extends BaseView {
     }
 
     @Override
-    public void init() {
+    public boolean init() {
+        return false;
     }
 
     @Override

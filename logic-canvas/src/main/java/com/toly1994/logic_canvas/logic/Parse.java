@@ -43,7 +43,7 @@
 //            float c = line.mc;
 //            float ang = line.mang;
 //
-//            line.mp1 = new Pos(Math.round(p0.x + Math.sin(ang) * c), Math.round(p0.y + Math.cos(ang) * c));
+//            line.mp1 = new Pos(Math.round(mPos.x + Math.sin(ang) * c), Math.round(mPos.y + Math.cos(ang) * c));
 //            Parse.getLine(line);
 //            return line;
 //        }
@@ -66,7 +66,7 @@
 //                return line;
 //            }
 //
-//            float k = (p1.y - p0.y) / (p1.x - p0.x);
+//            float k = (p1.y - mPos.y) / (p1.x - mPos.x);
 //            float ang = (float) Math.atan(k);
 //            line.mang = ang;
 //
@@ -74,17 +74,17 @@
 //            if (Logic.isExist(line.mx)) {
 //                float x = line.mx;
 //
-//                line.my = k * (x - p0.x) + p0.y;
+//                line.my = k * (x - mPos.x) + mPos.y;
 //                return line;
 //            }
 //            if (Logic.isExist(line.my)) {
 //                float y = line.my;
-//                line.mx = (y - p0.y) / k + p0.x;
+//                line.mx = (y - mPos.y) / k + mPos.x;
 //                return line;
 //            }
 //
 //            line.mk = k;
-//            line.mb0 = p0.y - k * p0.x;
+//            line.mb0 = mPos.y - k * mPos.x;
 //            return line;
 //        }
 //
@@ -93,7 +93,7 @@
 //        if (Logic.isExist(line.mp0, line.mk)) {
 //            Pos p0 = line.mp0;
 //            float k = line.mk;
-//            Pos p1 = new Pos((p0.x + 1)*line.mc, (p0.y + k)*line.mc);
+//            Pos p1 = new Pos((mPos.x + 1)*line.mc, (mPos.y + k)*line.mc);
 //            line.p1(p1);
 //            return line;
 //        }
@@ -103,7 +103,7 @@
 //            Pos p1 = line.mp1;
 //            float k = line.mk;
 //            Pos p0 = new Pos(( p1.x + 1)*line.mc, (p1.y + k)*line.mc);
-//            line.p0(p0);
+//            line.mPos(mPos);
 //            return line;
 //        }
 //
