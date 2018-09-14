@@ -30,6 +30,8 @@ Painter采用单例模式
 支持点的绘制，及使用点对极坐标方程进行模拟，详见：[Android模拟绘制极坐标方程](https://www.jianshu.com/p/921d6b9a5788)
 优化BaseView
 
+##### 2018年9月13号更新：由V0.05升级到V0.06
+优化BaseView
 
 ---
 
@@ -43,7 +45,7 @@ allprojects {
 	}
 }
 
-implementation 'com.github.toly1994328:logic-canvas-android:0.05'
+implementation 'com.github.toly1994328:logic-canvas-android:0.06'
 ```
 ##### 点类Pos的使用：
 
