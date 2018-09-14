@@ -8,8 +8,10 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.toly1994.logic_canvas.core.shape.ShapeArc;
+import com.toly1994.logic_canvas.core.shape.ShapeDot;
 import com.toly1994.logic_canvas.core.shape.ShapeLine;
 import com.toly1994.logic_canvas.core.shape.ShapeRect;
+import com.toly1994.logic_canvas.core.shape.ShapeStar;
 import com.toly1994.logic_canvas.core.shape.ShapeText;
 import com.toly1994.logic_canvas.logic.Logic;
 import com.toly1994.logic_canvas.utils.CanvasUtils;
@@ -46,6 +48,8 @@ public abstract class BaseView extends View {
     protected ShapeText st = new ShapeText();
     protected ShapeArc sa = new ShapeArc();
     protected ShapeRect sr = new ShapeRect();
+    protected ShapeDot sd = new ShapeDot();
+    protected ShapeStar ss = new ShapeStar();
 
     private float winW = CanvasUtils.getScreenWidth(getContext());
     private float winH = CanvasUtils.getScreenHeight(getContext());
@@ -67,7 +71,7 @@ public abstract class BaseView extends View {
 
     public BaseView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        isOnTouchEvent = init();
+        isOnTouchEvent = init(attrs);
     }
 
     /**
@@ -275,7 +279,22 @@ public abstract class BaseView extends View {
         return dp * scale + 0.5f;
     }
 
-    public abstract boolean init();
+    /**
+     * 适配dp
+     *
+     * @param id dimen的值
+     * @return px 数字
+     */
+    public int dimen(int id) {
+        return getContext().getResources().getDimensionPixelSize(id);
+    }
+
+    /**
+     * 初始化工作
+     * @param attrs 自定义属性
+     * @return 是否相应事件
+     */
+    public abstract boolean init(AttributeSet attrs);
 
     ////////////////////////////////////-----------事件监听回调
     public interface OnEventListener {
@@ -289,8 +308,8 @@ public abstract class BaseView extends View {
         /**
          * 抬起
          *
-         * @param pos 点前点
-         * @param speed 速度
+         * @param pos         点前点
+         * @param speed       速度
          * @param orientation 方向
          */
         void up(Pos pos, MoveSpeed speed, Orientation orientation);

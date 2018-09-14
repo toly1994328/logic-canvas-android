@@ -37,7 +37,7 @@ public class PointView extends BaseView {
     }
 
     @Override
-    public boolean init() {
+    public boolean init(AttributeSet attrs) {
 
         setOnEventListener(new OnEventListener() {
             @Override
