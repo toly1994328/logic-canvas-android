@@ -152,6 +152,8 @@ public abstract class BaseView extends View {
                 break;
 
             case MotionEvent.ACTION_MOVE:
+
+
                 //最后一次坐标点
                 p = v2(event.getX(), event.getY());
                 //处理速度
@@ -161,6 +163,7 @@ public abstract class BaseView extends View {
                 dy = p.y - tempP0.y;
 
                 double dir = Logic.deg((float) Math.acos(dx / allS));
+                orientationHandler();//处理方向
 
                 if (mOnEventListener != null) {
                     mOnEventListener.move(mPos, allS, dy, dx, dy < 0 ? dir : -dir, mOrientation);
