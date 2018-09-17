@@ -33,6 +33,8 @@ Painter采用单例模式
 ##### 2018年9月13号更新：由V0.05升级到V0.06
 优化BaseView
 
+##### 2018年9月17号更新：由V0.06升级到V0.07
+优化BaseView
 ---
 
 
@@ -45,7 +47,7 @@ allprojects {
 	}
 }
 
-implementation 'com.github.toly1994328:logic-canvas-android:0.06'
+implementation 'com.github.toly1994328:logic-canvas-android:0.07'
 ```
 ##### 点类Pos的使用：
 
