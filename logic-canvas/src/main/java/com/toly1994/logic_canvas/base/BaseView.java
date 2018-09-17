@@ -3,6 +3,7 @@ package com.toly1994.logic_canvas.base;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -162,7 +163,7 @@ public abstract class BaseView extends View {
                 double dir = Logic.deg((float) Math.acos(dx / allS));
 
                 if (mOnEventListener != null) {
-                    mOnEventListener.move(mPos, allS, dy, dx, dy < 0 ? dir : -dir);
+                    mOnEventListener.move(mPos, allS, dy, dx, dy < 0 ? dir : -dir, mOrientation);
                 }
                 if (Math.abs(dy) > 50 / 3.0 * mDensity) {
                     isMove = true;
@@ -290,7 +291,20 @@ public abstract class BaseView extends View {
     }
 
     /**
+     * 适配dp
+     *
+     * @param id dimen的值
+     * @return px 数字
+     */
+    public int color(int id) {
+        return ContextCompat.getColor(getContext(), id);
+    }
+
+
+
+    /**
      * 初始化工作
+     *
      * @param attrs 自定义属性
      * @return 是否相应事件
      */
@@ -317,13 +331,14 @@ public abstract class BaseView extends View {
         /**
          * 移动
          *
-         * @param pos 点前点
-         * @param s   位移
-         * @param dy  y 位移
-         * @param dx  x位移
-         * @param dir 方向
+         * @param pos         点前点
+         * @param s           位移
+         * @param dy          y 位移
+         * @param dx          x位移
+         * @param dir         角度
+         * @param orientation
          */
-        void move(Pos pos, double s, float dy, float dx, double dir);
+        void move(Pos pos, double s, float dy, float dx, double dir, Orientation orientation);
     }
 
     private OnEventListener mOnEventListener;

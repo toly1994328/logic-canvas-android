@@ -51,7 +51,7 @@ public class PointView extends BaseView {
             }
 
             @Override
-            public void move(Pos pos, double s, float dy, float dx, double dir) {
+            public void move(Pos pos, double s, float dy, float dx, double dir, Orientation orientation) {
 
             }
 
